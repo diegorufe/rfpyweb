@@ -18,6 +18,14 @@ class RFBaseDao:
         self.vo_class = vo_class
         self.db_engine_type = db_engine_type
         self._table_name = self.vo_class().table_name
+        self._fields_table = None
+
+    def get_table_name(self):
+        """
+        Method for get table table for dao
+        :return: name for table for dao
+        """
+        return self._table_name
 
     def add(self, locale, vo, params=None, rf_transaction=None):
         pass
@@ -59,7 +67,7 @@ class RFBaseDao:
         if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
             # Find all field raw columns for table
             if find_all_fields and rf_transaction is not None:
-                ar_fields_query = rf_transaction.get_fields_table(self._table_name, self.db_engine_type)
+                ar_fields_query = self._fields_table
             else:
                 ar_fields_query = ar_fields
 
