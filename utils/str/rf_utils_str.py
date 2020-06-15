@@ -21,4 +21,4 @@ class RFUtilsStr:
         :param value: to check
         :return: True if value is None or non instance of str or value.strip() == ""
         """
-        return RFUtilsStr.is_not_emtpy(value) is not True
+        return RFUtilsStr.is_not_emtpy(value) is not False

@@ -47,7 +47,8 @@ class RFBaseDao:
         query_builder = ""
 
         # Build select
-        query_builder_select = self.__build_select_query__(self.__get_fields_query__(ar_fields, rf_transaction))
+        query_builder_select = self.__build_select_query__(
+            ar_fields_query=self.__get_fields_query__(ar_fields, rf_transaction), ar_joins_query=ar_joins)
 
         # Build from
         query_builder_form = self.__build_from_query__()
@@ -74,10 +75,11 @@ class RFBaseDao:
 
         return ar_fields_query
 
-    def __build_select_query__(self, ar_fields_query):
+    def __build_select_query__(self, ar_fields_query=None, ar_joins_query=None):
         """
         Method for build select query
         :param ar_fields_query: to get in query
+        :param ar_joins_query: joins for query. Is necessary if has join is fetch
         :return: select query
         """
         query_builder = None

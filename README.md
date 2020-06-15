@@ -52,6 +52,29 @@ Experimental history for library, in process ....
         """
 ## Utils
 
+### array 
+
+#### rf_utils_array.py
+
+> RFUtilsArray: class for utilities for arrays 
+>- Methods:
+>
+    @staticmethod
+    def is_not_empty(array):
+        """
+        Method to check array is not empty.
+        :param array: to check
+        :return: True if array is not None isinstance (list, tuple, np.ndarray) and len > 0
+        """
+>
+    @staticmethod
+    def is_empty(array):
+        """
+        Method to check array is empty
+        :param array: to check
+        :return: True if is None not instance (list, tuple, np.ndarray) or len = 0
+        """
+
 ### built
 
 #### rf_utils_built.py
