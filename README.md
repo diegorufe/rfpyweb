@@ -69,6 +69,9 @@ Experimental history for library, in process ....
         :param value_to_set:
         :return: True if set attr False if not
         """
+        
+### str
+
 #### rf_utils_str.py
 
 > RFUtilsStr: class for utilities built
