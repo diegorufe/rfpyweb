@@ -20,6 +20,22 @@ Experimental history for library, in process ....
         :param alias_field: for field
         """
 
+### join.py
+
+> Join: Class to join store data
+>
+> - Methods:
+>
+    def __init__(self, join_table=None, join_alias=None, join_condition=None,
+                 join_type: EnumJoinType = EnumJoinType.INNER_JOIN):
+        """
+        Constructor for class join
+        :param join_table: join table
+        :param join_alias: for join
+        :param join_condition: for join
+        :param join_type: for join
+        """ 
+
 ## BO
 
 ### rf_base_bo.py

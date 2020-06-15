@@ -1,7 +1,7 @@
 import enum
 
 
-class EnumDbEngineType(enum.Enum):
+class Enum(enum.Enum):
     """
     Enum for db engine types
     """
