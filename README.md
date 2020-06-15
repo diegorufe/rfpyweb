@@ -32,7 +32,7 @@ Experimental history for library, in process ....
         Constructor for class join
         :param join_table: join table
         :param join_alias: for join
-        :param join_condition: for join
+        :param join_field: for join
         :param join_type: for join
         """ 
 

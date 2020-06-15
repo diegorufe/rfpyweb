@@ -108,7 +108,7 @@ class RFBaseDao:
 
                     first = False
             else:
-                query_builder = query_builder + " * "
+                query_builder = query_builder + " " + self._table_name + ".* "
 
         return query_builder
 
