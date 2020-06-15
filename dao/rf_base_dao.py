@@ -4,6 +4,7 @@
 
 """
 from transactions.enum_db_engine_type import EnumDbEngineType
+from utils.str.rf_utils_str import RFUtilsStr
 
 
 class RFBaseDao:
@@ -91,7 +92,7 @@ class RFBaseDao:
                     if not first:
                         query_builder = query_builder + " , "
 
-                    if field.alias_table is not None and field.alias_table.strip() != "":
+                    if RFUtilsStr.is_not_emtpy(field.alias_table):
                         query_builder = query_builder + " " + field.alias_table.strip() + "."
                     else:
                         query_builder = query_builder + " " + self._table_name.strip() + "."
@@ -100,7 +101,7 @@ class RFBaseDao:
 
                     query_builder = query_builder
 
-                    if field.alias_field is not None and field.alias_field.strip() != "":
+                    if RFUtilsStr.is_not_emtpy(field.alias_field):
                         query_builder = query_builder + " " + field.alias_field.strip() + " "
                     else:
                         query_builder = query_builder + " " + field.name.strip() + " "
