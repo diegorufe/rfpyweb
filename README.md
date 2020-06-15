@@ -26,15 +26,16 @@ Experimental history for library, in process ....
 >
 > - Methods:
 >
-    def __init__(self, join_table=None, join_alias=None, join_condition=None,
-                 join_type: EnumJoinType = EnumJoinType.INNER_JOIN):
+    def __init__(self, join_table=None, join_alias=None, join_field=None,
+                 join_type: EnumJoinType = EnumJoinType.INNER_JOIN, custom_query_join=None):
         """
         Constructor for class join
         :param join_table: join table
         :param join_alias: for join
         :param join_field: for join
         :param join_type: for join
-        """ 
+        :param custom_query_join if is not None use this for join data
+        """
 
 ## BO
 
