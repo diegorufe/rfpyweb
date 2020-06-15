@@ -19,7 +19,7 @@ class RFTransactionManager:
         self.function_create_transaction = function_create_transaction
         self.function_commit_transaction = function_commit_transaction
         self.function_rollback_transaction = function_rollback_transaction
-        self.dic_information_db_engines = None
+        self.dic_information_db_engines = {}
 
     def create_transaction(self, enum_transaction_type: EnumTransactionType = EnumTransactionType.PROPAGATED,
                            params=None):

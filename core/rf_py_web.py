@@ -66,7 +66,6 @@ class RFPyWeb(Flask):
         :param security_check_request_function: function for execute extra check validation request function. First
         argument is rf_py_web application, second argument is path for request, third argument is the request
         :param security_auth_mode: Mode for login and secure path request. For default value is JWT
-        :param rf_transaction_manager for manage transaction. See configure_transaction_manager for this class
         """
         # Call super constructor from Flask
         Flask.__init__(
@@ -79,7 +78,7 @@ class RFPyWeb(Flask):
         # Mode security
         # if is none default jwt
         self.security_auth_mode = security_auth_mode if not None else EnumSecurityAuthMode.JWT
-        self.rf_transaction_manager = rf_transaction_manager
+        self.rf_transaction_manager = RFTransactionManager()
         self.dic_db_engines = {}
         self.dic_information_db_engines = {}
         self.dic_services = {}
