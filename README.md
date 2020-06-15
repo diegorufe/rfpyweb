@@ -69,5 +69,25 @@ Experimental history for library, in process ....
         :param value_to_set:
         :return: True if set attr False if not
         """
+#### rf_utils_str.py
+
+> RFUtilsStr: class for utilities built
+>- Methods:
+>
+    @staticmethod
+    def is_not_emtpy(value):
+        """
+        Method to check value is not empty
+        :param value: to check
+        :return: True if value is not None and isinstance str and strip() != ""
+        """
+>
+    @staticmethod
+    def is_empty(value):
+        """
+        Method to check value is empty
+        :param value: to check
+        :return: True if value is None or non instance of str or value.strip() == ""
+        """
 
 
