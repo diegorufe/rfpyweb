@@ -7,7 +7,7 @@ from transactions.rf_transaction_manager import RFTransactionManager
 _dic_db_engines = {}
 _dic_information_db_engines = {}
 _dic_services = {}
-_rf_transaction_manager = RFTransactionManager()
+_rf_transaction_manager = None
 
 
 class RFContext:
@@ -71,10 +71,10 @@ class RFContext:
 
         if _dic_information_db_engines is not None and db_engine_type is not None and table_name is not None and \
                 db_engine_type in _dic_information_db_engines:
-            dic_table_columns = _dic_information_db_engines[db_engine_type]
+            db_engine_information = _dic_information_db_engines[db_engine_type]
 
-            if table_name in dic_table_columns:
-                ar_fields = dic_table_columns[table_name]
+            if table_name in db_engine_information.dic_table_columns:
+                ar_fields = db_engine_information.dic_table_columns[table_name]
 
         return ar_fields
 
@@ -133,4 +133,7 @@ class RFContext:
         Method for get transaction manager
         :return: transaction manager
         """
+        global _rf_transaction_manager
+        if _rf_transaction_manager is None:
+            _rf_transaction_manager = RFTransactionManager()
         return _rf_transaction_manager

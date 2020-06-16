@@ -1,17 +1,17 @@
 from core.rf_py_web import RFPyWeb
 from routes.crud.rf_base_crud_route import RFBaseCrudRoute
-from routes.rf_base_route import RFBaseRoute
+from test.test_dao import TestDao
+from test.test_bo import TestBo
 
 rf_py_web = RFPyWeb(__name__)
 
 # Create rf_mysql engine
-rf_py_web.create_db_engine_rf_mysql('test', 'root',  'root')
+rf_py_web.create_db_engine_rf_mysql('test', 'root', 'root')
 
-# Example for transaction
-rf_py_web.configure_transaction_manager()
+# Add services
+rf_py_web.add_service('test_bo', TestBo(TestDao()))
 
 # Examples of routes
-RFBaseRoute(rf_py_web=rf_py_web, path_requests='/test').load()
-RFBaseCrudRoute(rf_py_web=rf_py_web, path_requests='/clients').load()
+RFBaseCrudRoute(rf_py_web=rf_py_web, path_requests='/test', service_name='test_bo').load()
 
 rf_py_web.run(debug=True)

@@ -9,6 +9,7 @@ from utils.array.rf_utils_array import RFUtilsArray
 from constants.enum_join_type import EnumJoinType
 from constants.constants_associations import JOIN_ASSOCIATION_SEPARATOR, FIELD_TABLE_SEPARATOR
 from context.rf_context import RFContext
+from utils.built.rf_utils_built import RFUtilsBuilt
 
 
 class RFBaseDao:
@@ -19,7 +20,6 @@ class RFBaseDao:
         :param vo_class is a class vo data
         :param db_engine_type: default value is EnumDbEngineType.RF_MYSQL
         """
-        RFBaseDao.__init__(self)
         self.vo_class = vo_class
         self.db_engine_type = db_engine_type
         self._table_name = self.vo_class().table_name
@@ -27,7 +27,7 @@ class RFBaseDao:
 
         # Load fields for db engine
         if RFUtilsStr.is_not_emtpy(self._table_name) and self.db_engine_type is not None:
-            self._fields_table = RFContext.get_fields_table(self._fields_table, db_engine_type)
+            self._fields_table = RFContext.get_fields_table(self._table_name, db_engine_type)
 
     def get_table_name(self):
         """
@@ -36,20 +36,20 @@ class RFBaseDao:
         """
         return self._table_name
 
-    def add(self, locale, vo, params=None, rf_transaction=None):
+    def add(self, vo, params=None, rf_transaction=None, locale=None):
         pass
 
-    def edit(self, locale, vo, params=None, rf_transaction=None):
+    def edit(self, vo, params=None, rf_transaction=None, locale=None):
         pass
 
-    def read(self, locale, id, ar_joins=None, params=None, rf_transaction=None):
+    def read(self, id, ar_joins=None, params=None, rf_transaction=None, locale=None):
         pass
 
-    def delete(self, locale, id, params=None, rf_transaction=None):
+    def delete(self, id, params=None, rf_transaction=None, locale=None):
         pass
 
-    def list(self, locale, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limits=None,
-             params=None, rf_transaction=None):
+    def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limits=None,
+             params=None, rf_transaction=None, locale=None):
 
         dic_params = {}
 
@@ -74,7 +74,31 @@ class RFBaseDao:
 
         query_builder = query_builder_select + query_builder_form + query_builder_joins
 
-        return rf_transaction.execute_list_query(query_builder, dic_params=dic_params)
+        ar_data = rf_transaction.execute_list_query(query_builder, dic_params=dic_params)
+
+        ar_response = []
+
+        if ar_data is not None:
+            vo_instance = None
+            old_instance = None
+            for data in ar_data:
+
+                vo_instance = self.vo_class()
+                for key in data:
+                    old_instance = vo_instance
+                    ar_key_split = RFUtilsStr.split(key, FIELD_TABLE_SEPARATOR)
+
+                    if RFUtilsArray.is_not_empty(ar_key_split):
+                        ar_key_split.pop(0)
+
+                        for field in ar_key_split:
+                            if RFUtilsBuilt.has_attr(old_instance, field):
+                                RFUtilsBuilt.set_attr(old_instance, field, data[key])
+                                old_instance = RFUtilsBuilt.get_attr(old_instance, field)
+
+                ar_response.append(vo_instance)
+
+        return ar_response
 
     def __get_fields_query__(self, ar_fields, rf_transaction):
         """
@@ -133,12 +157,12 @@ class RFBaseDao:
             # Load all fields
             elif RFUtilsArray.is_not_empty(self._fields_table):
                 first = True
-                for field in ar_fields_query:
+                for field in self._fields_table:
                     if not first:
                         query_builder = query_builder + " , "
                     query_builder = query_builder + " " + \
-                                    self.get_table_name().strip() + "." + field.name.strip() + " " + \
-                                    self.get_table_name() + FIELD_TABLE_SEPARATOR + field.name.strip() + " "
+                                    self._table_name + "." + field.name.strip() + " " + \
+                                    self._table_name + FIELD_TABLE_SEPARATOR + field.name.strip() + " "
 
                     first = False
 

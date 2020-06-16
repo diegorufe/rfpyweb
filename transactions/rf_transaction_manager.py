@@ -5,7 +5,6 @@
 """
 from transactions.enum_transaction_type import EnumTransactionType
 from transactions.enum_db_engine_type import EnumDbEngineType
-from context.rf_context import RFContext
 from transactions.rf_transaction import RFTransaction
 
 
@@ -32,6 +31,8 @@ class RFTransactionManager:
         :param db_engine_type engine for db
         :return: response for transaction create
         """
+        from context.rf_context import RFContext
+
         # set default transaction propagated
         enum_transaction_type = enum_transaction_type if not None else EnumTransactionType.PROPAGATED
         response = None
@@ -54,19 +55,29 @@ class RFTransactionManager:
         :return: response for commit transaction
         """
         response = False
+        exception_to_raise = None
         try:
+
             if rf_transaction is not None and self.function_commit_transaction is not None:
                 response = self.function_commit_transaction(rf_transaction, params)
+
             elif rf_transaction is not None:
                 if rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL:
                     rf_transaction.transaction_database.commit()
                     rf_transaction.transaction_database.close()
                     response = True
+
         except Exception as ex:
+            exception_to_raise = ex
             response = False
         # If response is False rollback transaction
+
         if response is False:
             self.rollback(rf_transaction, params=params)
+
+        if exception_to_raise is not None:
+            raise exception_to_raise
+
         return response
 
     def rollback(self, rf_transaction: RFTransaction, params=None):
@@ -77,8 +88,10 @@ class RFTransactionManager:
         :return: response for rollback transaction
         """
         response = False
+
         if rf_transaction is not None and self.function_rollback_transaction is not None:
             response = self.function_commit_transaction(rf_transaction, params=params)
+
         elif rf_transaction is not None:
             if rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL:
                 rf_transaction.transaction_database.rollback()

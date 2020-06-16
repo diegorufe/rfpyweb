@@ -43,9 +43,9 @@ class RFTransaction:
             if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
                 if list_query is True:
                     cursor = self.transaction_database.cursor(cursor=DictCursor)
+                    cursor.execute(query, dic_params)
+                    response = cursor.fetchall()
                 else:
                     cursor = self.transaction_database.cursor()
-
-                response = cursor.execute(query, dic_params)
 
         return response

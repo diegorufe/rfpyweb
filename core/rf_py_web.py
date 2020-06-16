@@ -8,6 +8,7 @@ from functools import wraps
 from security.enum_secury_auth_mode import EnumSecurityAuthMode
 from transactions.enum_db_engine_type import EnumDbEngineType
 from context.rf_context import RFContext
+from flask import json
 
 
 class RFPyWeb(Flask):
@@ -75,8 +76,19 @@ class RFPyWeb(Flask):
         # Mode security
         # if is none default jwt
         self.security_auth_mode = security_auth_mode if not None else EnumSecurityAuthMode.JWT
+        # Call this for init context
+        RFContext.get_transaction_manager()
 
-    def json(self, *args, **kwargs):
+    def json(self, data):
+        """
+        Method for convert data to json.
+        :param data to convert
+        :return: data convert to json
+        """
+        return json.dumps(data, default=lambda o: o.__dict__,
+                          sort_keys=True)
+
+    def jsonify(self, *args, **kwargs):
         """
         Method for convert data to json.
         :return: data convert to json
@@ -103,7 +115,6 @@ class RFPyWeb(Flask):
         :param path_request: to check
         :return: response for request path request
         """
-        print("Route: " + path_request)
         response_check_secure = None
 
         # first check toke if security is jwt

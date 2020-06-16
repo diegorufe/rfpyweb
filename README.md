@@ -135,7 +135,7 @@ Experimental history for library, in process ....
         """
         Method to check array is not empty.
         :param array: to check
-        :return: True if array is not None isinstance (list, tuple, np.ndarray) and len > 0
+        :return: True if array is not None isinstance (list, tuple) and len > 0
         """
 >
     @staticmethod
@@ -143,7 +143,7 @@ Experimental history for library, in process ....
         """
         Method to check array is empty
         :param array: to check
-        :return: True if is None not instance (list, tuple, np.ndarray) or len = 0
+        :return: True if is None not instance (list, tuple) or len = 0
         """
 
 ### built
@@ -202,6 +202,16 @@ Experimental history for library, in process ....
         Method to check value is empty
         :param value: to check
         :return: True if value is None or non instance of str or value.strip() == ""
+        """
+>
+
+    @staticmethod
+    def split(value, separator):
+        """
+        Method for split str
+        :param value: to split
+        :param separator: for apply split
+        :return: data split if value is not empty and separator is not None
         """
 
 
