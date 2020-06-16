@@ -51,8 +51,7 @@ class RFBaseDao:
     def list(self, locale, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limits=None,
              params=None, rf_transaction=None):
 
-        # Query builder
-        query_builder = ""
+        dic_params = {}
 
         # Build select
         query_builder_select = self.__build_select_query__(
@@ -66,6 +65,16 @@ class RFBaseDao:
 
         # Build where
         # TODO
+
+        # Build groupby
+
+        # Build orderby
+
+        # Build limit
+
+        query_builder = query_builder_select + query_builder_form + query_builder_joins
+
+        return rf_transaction.execute_list_query(query_builder, dic_params=dic_params)
 
     def __get_fields_query__(self, ar_fields, rf_transaction):
         """
@@ -120,6 +129,7 @@ class RFBaseDao:
                                         self.get_table_name() + FIELD_TABLE_SEPARATOR + field.name.strip() + " "
 
                     first = False
+
             # Load all fields
             elif RFUtilsArray.is_not_empty(self._fields_table):
                 first = True
@@ -142,9 +152,14 @@ class RFBaseDao:
                     if join.join_type is not None and join.join_type in ar_joins_fetch and RFUtilsStr.is_not_emtpy(
                             join.join_table) and RFUtilsStr.is_not_emtpy(join.join_field) and \
                             RFUtilsStr.is_empty(join.join_alias):
-                        # TODO join fetch with alias. Check if this is correct
-                        query_builder = query_builder + ", " + self._table_name + \
-                                        JOIN_ASSOCIATION_SEPARATOR + join.join_field + ".* "
+                        ar_fields_join = RFContext.get_fields_table(join.join_table)
+                        if RFUtilsArray.is_not_empty(ar_fields_join):
+                            for field in ar_fields_join:
+                                query_builder = query_builder + ", " + self._table_name + \
+                                                JOIN_ASSOCIATION_SEPARATOR + join.join_table + "." + field.name \
+                                                + "  " + self._table_name \
+                                                + JOIN_ASSOCIATION_SEPARATOR + join.join_field \
+                                                + FIELD_TABLE_SEPARATOR + field.name
 
         return query_builder
 
@@ -172,7 +187,33 @@ class RFBaseDao:
         if RFUtilsArray.is_not_empty(ar_joins_query):
             for join in ar_joins_query:
                 if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
-                    # TODO
-                    pass
+
+                    if RFUtilsStr.is_not_emtpy(join.custom_query_join):
+                        query_builder = query_builder + " " + join.custom_query_join
+                    else:
+                        join_type = " INNER JOIN "
+
+                        if join.join_type == EnumJoinType.RIGHT_JOIN or \
+                                join.join_type == EnumJoinType.RIGHT_JOIN_FETCH:
+                            join_type = " INNER JOIN "
+                        elif join.join_type == EnumJoinType.LEFT_JOIN or \
+                                join.join_type == EnumJoinType.LEFT_JOIN_FETCH:
+                            join_type = " LEFT JOIN "
+                        elif join.join_type == EnumJoinType.RIGHT_JOIN or \
+                                join.join_type == EnumJoinType.RIGHT_JOIN_FETCH:
+                            join_type = " RIGHT JOIN "
+
+                        query_builder = query_builder + " " + join_type + " " + join.join_table
+
+                        if RFUtilsStr.is_not_emtpy(join.join_alias):
+                            query_builder = query_builder + " AS " + join.join_alias
+                            query_builder = query_builder + " ON " + join.join_alias + "." + join.join_table_field \
+                                            + " = " + self._table_name + join.join_field
+                        else:
+                            query_builder = query_builder + " AS " + self._table_name + JOIN_ASSOCIATION_SEPARATOR + \
+                                            join.join_field + " "
+                            query_builder = query_builder + " ON " + self._table_name + JOIN_ASSOCIATION_SEPARATOR + \
+                                            join.join_field + "." + join.join_table_field \
+                                            + " = " + self._table_name + join.join_table_field
 
         return query_builder

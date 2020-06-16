@@ -6,9 +6,7 @@
 from flask import Flask, jsonify
 from functools import wraps
 from security.enum_secury_auth_mode import EnumSecurityAuthMode
-from transactions.rf_transaction_manager import RFTransactionManager
 from transactions.enum_db_engine_type import EnumDbEngineType
-from transactions.rf_db_engine_information import RFDbEngineInformation
 from context.rf_context import RFContext
 
 
@@ -77,7 +75,6 @@ class RFPyWeb(Flask):
         # Mode security
         # if is none default jwt
         self.security_auth_mode = security_auth_mode if not None else EnumSecurityAuthMode.JWT
-        self.rf_transaction_manager = RFTransactionManager()
 
     def json(self, *args, **kwargs):
         """
@@ -95,9 +92,10 @@ class RFPyWeb(Flask):
         :param function_rollback_transaction: this function must be params rf_transaction and params=None
         :return: None
         """
-        self.rf_transaction_manager = RFTransactionManager(function_create_transaction=function_create_transaction,
-                                                           function_commit_transaction=function_commit_transaction,
-                                                           function_rollback_transaction=function_rollback_transaction)
+        rf_transaction_manager = RFContext.get_transaction_manager()
+        rf_transaction_manager.function_create_transaction = function_create_transaction
+        rf_transaction_manager.function_commit_transaction = function_commit_transaction
+        rf_transaction_manager.function_rollback_transaction = function_rollback_transaction
 
     def __check_secure_request__(self, path_request):
         """

@@ -2,10 +2,12 @@ from transactions.enum_db_engine_type import EnumDbEngineType
 from transactions.rf_db_engine_information import RFDbEngineInformation
 from utils.str.rf_utils_str import RFUtilsStr
 from beans.field import Field
+from transactions.rf_transaction_manager import RFTransactionManager
 
 _dic_db_engines = {}
 _dic_information_db_engines = {}
 _dic_services = {}
+_rf_transaction_manager = RFTransactionManager()
 
 
 class RFContext:
@@ -124,3 +126,11 @@ class RFContext:
 
             # Add db engine information for context
             _dic_information_db_engines[EnumDbEngineType.RF_MYSQL] = rf_db_engine_information
+
+    @staticmethod
+    def get_transaction_manager():
+        """
+        Method for get transaction manager
+        :return: transaction manager
+        """
+        return _rf_transaction_manager

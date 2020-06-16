@@ -36,6 +36,7 @@ class RFBaseBo:
     @transaction_decorator(EnumTransactionType.PROPAGATED)
     def list(self, locale, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limits=None,
              params=None, rf_transaction=None):
-        return self.dao.list(locale, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None,
-                             limits=None,
-                             params=None, rf_transaction=None)
+        return self.dao.list(locale, ar_fields=ar_fields, ar_filters=ar_filters, ar_joins=ar_joins, ar_orders=ar_orders,
+                             ar_groups=ar_groups,
+                             limits=limits,
+                             params=params, rf_transaction=rf_transaction)
