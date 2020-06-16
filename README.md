@@ -50,6 +50,65 @@ Experimental history for library, in process ....
         :param dao: dao for bo,. Can be None
         :param transaction_manager: for manage transactions. Can be None
         """
+ 
+## Context
+
+### rf_context.py
+
+> RFContext: Class contains context methods
+>- Methods:
+>
+    @staticmethod
+    def add_service(key, service):
+        """
+        Method for add service. Only add if key is not none and service is not none and key dont find in service
+        :param key: to add service
+        :param service: to add
+        :return: None
+        """  
+>
+    @staticmethod
+    def get_service(key):
+        """
+        Method for get service
+        :param key: for get service
+        :return: service if found by key else return None
+        """
+>
+    @staticmethod
+    def add_db_engine(key: EnumDbEngineType, db_engine):
+        """
+        Method for add db engine. This method only add db_engine if not None and key not None
+        :param key: for db engine
+        :param db_engine: to add
+        :return: None
+        """
+>
+    @staticmethod
+    def get_db_engine(key: EnumDbEngineType):
+        """
+        Method for get db engine by key. If key is None or dont find engine return None
+        :param key: for get db engine
+        :return: db engine if found else return None
+        """
+>
+    @staticmethod
+    def get_fields_table(table_name, db_engine_type):
+        """
+        Method for get fields for table
+        :param table_name: is a name for table to get columns
+        :param db_engine_type:
+        :return: ar columns if found esle return empty array
+        """
+>
+    @staticmethod
+    def load_information_db_engine_rf_mysql(database):
+        """
+        Method for load information db enfine rf_mysql
+        :param database: for load information
+        :return: None
+        """      
+        
 ## Utils
 
 ### array 

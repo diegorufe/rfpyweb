@@ -19,7 +19,6 @@ class RFTransactionManager:
         self.function_create_transaction = function_create_transaction
         self.function_commit_transaction = function_commit_transaction
         self.function_rollback_transaction = function_rollback_transaction
-        self.dic_information_db_engines = {}
 
     def create_transaction(self, enum_transaction_type: EnumTransactionType = EnumTransactionType.PROPAGATED,
                            params=None):
@@ -62,21 +61,3 @@ class RFTransactionManager:
         if rf_transaction is not None and self.function_rollback_transaction is not None:
             response = self.function_commit_transaction(rf_transaction, params=params)
         return response
-
-    def get_fields_table(self, table_name, db_engine_type):
-        """
-        Method for get fields for table
-        :param table_name: is a name for table to get columns
-        :param db_engine_type:
-        :return: ar columns if found esle return empty array
-        """
-        ar_fields = []
-
-        if self.dic_information_db_engines is not None and db_engine_type is not None and table_name is not None and \
-                db_engine_type in self.dic_information_db_engines:
-            dic_table_columns = self.dic_information_db_engines[db_engine_type]
-
-            if table_name in dic_table_columns:
-                ar_fields = dic_table_columns[table_name]
-
-        return ar_fields

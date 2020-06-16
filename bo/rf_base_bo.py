@@ -15,11 +15,6 @@ class RFBaseBo:
         :param transaction_manager: for manage transactions. Can be None
         """
         self.dao = dao
-
-        # Set fields for table in dalo
-        if self.dao is not None:
-            self.dao._fields_table = transaction_manager.get_fields_table(self.dao.get_table_name(),
-                                                                          self.dao.db_engine_type)
         self.transaction_manager = transaction_manager
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)

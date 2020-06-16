@@ -1,15 +1,15 @@
+"""
+
+    This class extends Flask for build web applications
+
+"""
 from flask import Flask, jsonify
 from functools import wraps
 from security.enum_secury_auth_mode import EnumSecurityAuthMode
 from transactions.rf_transaction_manager import RFTransactionManager
 from transactions.enum_db_engine_type import EnumDbEngineType
 from transactions.rf_db_engine_information import RFDbEngineInformation
-
-"""
-
-    This class extends Flask for build web applications
-    
-"""
+from context.rf_context import RFContext
 
 
 class RFPyWeb(Flask):
@@ -27,8 +27,7 @@ class RFPyWeb(Flask):
             instance_relative_config=False,
             root_path=None,
             security_check_request_function=None,
-            security_auth_mode: EnumSecurityAuthMode = EnumSecurityAuthMode.JWT,
-            rf_transaction_manager=None
+            security_auth_mode: EnumSecurityAuthMode = EnumSecurityAuthMode.JWT
     ):
         """
         Constructor for web application. This class extends Flask for build lightweight applications
@@ -79,9 +78,6 @@ class RFPyWeb(Flask):
         # if is none default jwt
         self.security_auth_mode = security_auth_mode if not None else EnumSecurityAuthMode.JWT
         self.rf_transaction_manager = RFTransactionManager()
-        self.dic_db_engines = {}
-        self.dic_information_db_engines = {}
-        self.dic_services = {}
 
     def json(self, *args, **kwargs):
         """
@@ -153,9 +149,7 @@ class RFPyWeb(Flask):
         :param db_engine: to add
         :return: None
         """
-        if key is not None and db_engine is not None:
-            self.dic_db_engines[key] = db_engine
-            self.dic_information_db_engines[key] = RFDbEngineInformation(key)
+        RFContext.add_db_engine(key, db_engine)
 
     def get_db_engine(self, key: EnumDbEngineType):
         """
@@ -163,10 +157,7 @@ class RFPyWeb(Flask):
         :param key: for get db engine
         :return: db engine if found else return None
         """
-        db_engine = None
-        if key is not None and key in self.dic_db_engines:
-            db_engine = self.dic_db_engines[key]
-        return db_engine
+        RFContext.get_db_engine(key)
 
     def create_db_engine_rf_mysql(self, database: str, user: str, password: str):
         """
@@ -186,43 +177,7 @@ class RFPyWeb(Flask):
         self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
 
         # Load engine information
-        rf_db_engine_information = self.dic_information_db_engines[EnumDbEngineType.RF_MYSQL]
-        dic_table_columns = {}
-
-        connexion = mysql.connect()
-        cursor = connexion.cursor()
-
-        # Get columns information per table
-        cursor.execute(
-            "SELECT COLUMN_NAME , TABLE_NAME FROM `INFORMATION_SCHEMA`.`COLUMNS` "
-            " WHERE `TABLE_SCHEMA`=%s ORDER BY TABLE_NAME ASC",
-            database)
-
-        records = cursor.fetchall()
-
-        table = None
-        ar_records_table = []
-
-        for record in records:
-
-            if table != record[1] and len(ar_records_table):
-                dic_table_columns[table] = ar_records_table
-                ar_records_table = []
-
-            table = record[1]
-            ar_records_table.append(Field(name=record[0]))
-
-        if len(ar_records_table):
-            dic_table_columns[table] = ar_records_table
-
-        # Close mysql connection
-        cursor.close()
-        connexion.close()
-
-        rf_db_engine_information.dic_table_columns = dic_table_columns
-
-        # Add db engine information for transaction
-        self.rf_transaction_manager.dic_information_db_engines[EnumDbEngineType.RF_MYSQL] = rf_db_engine_information
+        RFContext.load_information_db_engine_rf_mysql(database)
 
     def add_service(self, key, service):
         """
@@ -231,8 +186,7 @@ class RFPyWeb(Flask):
         :param service: to add
         :return: None
         """
-        if key is not None and service is not None and key not in self.dic_services:
-            self.dic_services[key] = service
+        RFContext.add_service(key, service)
 
     def get_service(self, key):
         """
@@ -240,7 +194,4 @@ class RFPyWeb(Flask):
         :param key: for get service
         :return: service if found by key else return None
         """
-        service = None
-        if key is not None and key in self.dic_services:
-            service = self.dic_services[key]
-        return service
+        return RFContext.get_service(key)

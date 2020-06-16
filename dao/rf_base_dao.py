@@ -7,7 +7,8 @@ from transactions.enum_db_engine_type import EnumDbEngineType
 from utils.str.rf_utils_str import RFUtilsStr
 from utils.array.rf_utils_array import RFUtilsArray
 from constants.enum_join_type import EnumJoinType
-from constants.constants_associations import JOIN_ASSOCIATION_SEPARATOR
+from constants.constants_associations import JOIN_ASSOCIATION_SEPARATOR, FIELD_TABLE_SEPARATOR
+from context.rf_context import RFContext
 
 
 class RFBaseDao:
@@ -23,6 +24,10 @@ class RFBaseDao:
         self.db_engine_type = db_engine_type
         self._table_name = self.vo_class().table_name
         self._fields_table = None
+
+        # Load fields for db engine
+        if RFUtilsStr.is_not_emtpy(self._table_name) and self.db_engine_type is not None:
+            self._fields_table = RFContext.get_fields_table(self._fields_table, db_engine_type)
 
     def get_table_name(self):
         """
@@ -94,6 +99,7 @@ class RFBaseDao:
         if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
             query_builder = " SELECT "
 
+            # Load selected fields
             if RFUtilsArray.is_not_empty(ar_fields_query):
                 first = True
                 for field in ar_fields_query:
@@ -103,20 +109,28 @@ class RFBaseDao:
                     if RFUtilsStr.is_not_emtpy(field.alias_table):
                         query_builder = query_builder + " " + field.alias_table.strip() + "."
                     else:
-                        query_builder = query_builder + " " + self._table_name.strip() + "."
+                        query_builder = query_builder + " " + self.get_table_name().strip() + "."
 
                     query_builder = query_builder + field.name.strip()
-
-                    query_builder = query_builder
 
                     if RFUtilsStr.is_not_emtpy(field.alias_field):
                         query_builder = query_builder + " " + field.alias_field.strip() + " "
                     else:
-                        query_builder = query_builder + " " + field.name.strip() + " "
+                        query_builder = query_builder + " " + \
+                                        self.get_table_name() + FIELD_TABLE_SEPARATOR + field.name.strip() + " "
 
                     first = False
-            else:
-                query_builder = query_builder + " " + self._table_name + ".* "
+            # Load all fields
+            elif RFUtilsArray.is_not_empty(self._fields_table):
+                first = True
+                for field in ar_fields_query:
+                    if not first:
+                        query_builder = query_builder + " , "
+                    query_builder = query_builder + " " + \
+                                    self.get_table_name().strip() + "." + field.name.strip() + " " + \
+                                    self.get_table_name() + FIELD_TABLE_SEPARATOR + field.name.strip() + " "
+
+                    first = False
 
             # Check joins for get data
             if RFUtilsArray.is_not_empty(ar_joins_query):
