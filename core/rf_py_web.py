@@ -177,7 +177,6 @@ class RFPyWeb(Flask):
         :return: None
         """
         from flaskext.mysql import MySQL
-        from beans.field import Field
         self.config['MYSQL_DATABASE_USER'] = user
         self.config['MYSQL_DATABASE_PASSWORD'] = password
         self.config['MYSQL_DATABASE_DB'] = database

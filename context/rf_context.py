@@ -1,7 +1,7 @@
 from transactions.enum_db_engine_type import EnumDbEngineType
 from transactions.rf_db_engine_information import RFDbEngineInformation
 from utils.str.rf_utils_str import RFUtilsStr
-from beans.field import Field
+from beans.query.field import Field
 from transactions.rf_transaction_manager import RFTransactionManager
 
 _dic_db_engines = {}
