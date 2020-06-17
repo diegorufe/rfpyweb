@@ -24,6 +24,15 @@ Experimental history for library, in process ....
         :param custom_query_join if is not None use this for join data
         :param join_table_field: is field for join in join table
         """
+> Limit: Class to limit result for find data
+> - Methods:
+>
+    def __init__(self, start: int = 0, end: int = 0):
+        """
+        Constructor for limit
+        :param start: for query
+        :param end: of query
+        """
 
 ### join.py
 
