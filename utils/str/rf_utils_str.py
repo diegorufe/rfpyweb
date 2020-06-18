@@ -1,6 +1,7 @@
 """
 Utilities for str
 """
+import uuid
 
 
 class RFUtilsStr:
@@ -21,7 +22,7 @@ class RFUtilsStr:
         :param value: to check
         :return: True if value is None or non instance of str or value.strip() == ""
         """
-        return RFUtilsStr.is_not_emtpy(value) is not False
+        return RFUtilsStr.is_not_emtpy(value) is False
 
     @staticmethod
     def split(value, separator):
@@ -36,3 +37,22 @@ class RFUtilsStr:
             ar_response = value.split(separator)
 
         return ar_response
+
+    @staticmethod
+    def unique_str(time_execute: int = 1):
+        """
+        Method for generate unique str
+        :param time_execute for exeucte concat unique str
+        :return: unique str
+        """
+        unique = ""
+        counter: int = 0
+
+        if time_execute is None or time_execute < 0:
+            time_execute = 1
+
+        while counter < time_execute:
+            counter = counter + 1
+            unique = unique + uuid.uuid4().hex.upper()
+
+        return unique

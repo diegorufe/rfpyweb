@@ -222,5 +222,13 @@ Experimental history for library, in process ....
         :param separator: for apply split
         :return: data split if value is not empty and separator is not None
         """
+>
+    @staticmethod
+    def unique_str(time_execute: int = 1):
+        """
+        Method for generate unique str
+        :param time_execute for exeucte concat unique str
+        :return: unique str
+        """
 
 

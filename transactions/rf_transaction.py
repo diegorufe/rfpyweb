@@ -20,20 +20,20 @@ class RFTransaction:
         self.transaction_database = transaction_database
         self.db_engine_type = db_engine_type
 
-    def execute_list_query(self, query, dic_params=None):
+    def execute_list_query(self, query, dic_params_query=None):
         """
         Method for execute list query
         :param query:
-        :param dic_params:
+        :param dic_params_query:
         :return:
         """
-        return self.__execute_query__(query, dic_params=dic_params, list_query=True)
+        return self.__execute_query__(query, dic_params_query=dic_params_query, list_query=True)
 
-    def __execute_query__(self, query, dic_params=None, list_query=False):
+    def __execute_query__(self, query, dic_params_query=None, list_query=False):
         """
         Method for execute query
         :param query: to execute
-        :param dic_params: for query
+        :param dic_params_query: for query
         :param list_query: is list query
         :return: response for query
         """
@@ -43,7 +43,7 @@ class RFTransaction:
             if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
                 if list_query is True:
                     cursor = self.transaction_database.cursor(cursor=DictCursor)
-                    cursor.execute(query, dic_params)
+                    cursor.execute(query, dic_params_query)
                     response = cursor.fetchall()
                 else:
                     cursor = self.transaction_database.cursor()
