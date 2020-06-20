@@ -56,3 +56,17 @@ class RFUtilsStr:
             unique = unique + uuid.uuid4().hex.upper()
 
         return unique
+
+    @staticmethod
+    def replace(text: str, str_find_replace: str, str_replace_find: str):
+        """
+        MEthod for replace ocurences in text
+        :param text: to find replacementes
+        :param str_find_replace: to find replace
+        :param str_replace_find: to replace find
+        :return: text replace if text is not empty
+        """
+        result = None
+        if RFUtilsStr.is_not_emtpy(text):
+            result = text.replace(str_find_replace, str_replace_find)
+        return result

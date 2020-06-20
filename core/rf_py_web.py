@@ -184,9 +184,6 @@ class RFPyWeb(Flask):
         mysql.init_app(self)
         self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
 
-        # Load engine information
-        RFContext.load_information_db_engine_rf_mysql(database)
-
     def add_service(self, key, service):
         """
         Method for add service. Only add if key is not none and service is not none and key dont find in service

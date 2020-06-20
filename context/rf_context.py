@@ -1,13 +1,12 @@
 from transactions.enum_db_engine_type import EnumDbEngineType
-from transactions.rf_db_engine_information import RFDbEngineInformation
 from utils.str.rf_utils_str import RFUtilsStr
-from beans.query.field import Field
 from transactions.rf_transaction_manager import RFTransactionManager
+from db.rf_db_tables_information import RFDbTableInformation
 
 _dic_db_engines = {}
-_dic_information_db_engines = {}
 _dic_services = {}
 _rf_transaction_manager = None
+_dic_db_tables_information = {}
 
 
 class RFContext:
@@ -45,7 +44,6 @@ class RFContext:
         """
         if key is not None and db_engine is not None:
             _dic_db_engines[key] = db_engine
-            _dic_information_db_engines[key] = RFDbEngineInformation(key)
 
     @staticmethod
     def get_db_engine(key: EnumDbEngineType):
@@ -60,72 +58,40 @@ class RFContext:
         return db_engine
 
     @staticmethod
-    def get_fields_table(table_name, db_engine_type):
+    def get_columns_table(vo_class_name: str = None):
         """
         Method for get fields for table
-        :param table_name: is a name for table to get columns
-        :param db_engine_type:
-        :return: ar columns if found esle return empty array
+        :param vo_class_name: is a name for table to get columns
+        :return: map columns for table
         """
-        ar_fields = []
+        dic_columns = {}
 
-        if _dic_information_db_engines is not None and db_engine_type is not None and table_name is not None and \
-                db_engine_type in _dic_information_db_engines:
-            db_engine_information = _dic_information_db_engines[db_engine_type]
+        if RFUtilsStr.is_not_emtpy(vo_class_name) and vo_class_name in _dic_db_tables_information:
+            dic_columns = _dic_db_tables_information[vo_class_name]
 
-            if table_name in db_engine_information.dic_table_columns:
-                ar_fields = db_engine_information.dic_table_columns[table_name]
-
-        return ar_fields
+        return dic_columns
 
     @staticmethod
-    def load_information_db_engine_rf_mysql(database):
+    def add_table(vo_class_name):
         """
-        Method for load information db enfine rf_mysql
-        :param database: for load information
+        Method for add table to context
+        :param vo_class_name: for mapping data
         :return: None
         """
-        rf_mysql_engine = RFContext.get_db_engine(EnumDbEngineType.RF_MYSQL)
+        if vo_class_name is not None:
+            _dic_db_tables_information[vo_class_name] = RFDbTableInformation(vo_class_name)
 
-        if rf_mysql_engine is not None and RFUtilsStr.is_not_emtpy(database):
-            # Load engine information
-            rf_db_engine_information = _dic_information_db_engines[EnumDbEngineType.RF_MYSQL]
-            dic_table_columns = {}
-
-            connexion = rf_mysql_engine.connect()
-            cursor = connexion.cursor()
-
-            # Get columns information per table
-            cursor.execute(
-                "SELECT COLUMN_NAME , TABLE_NAME FROM `INFORMATION_SCHEMA`.`COLUMNS` "
-                " WHERE `TABLE_SCHEMA`=%s ORDER BY TABLE_NAME ASC",
-                database)
-
-            records = cursor.fetchall()
-
-            table = None
-            ar_records_table = []
-
-            for record in records:
-
-                if table != record[1] and len(ar_records_table):
-                    dic_table_columns[table] = ar_records_table
-                    ar_records_table = []
-
-                table = record[1]
-                ar_records_table.append(Field(name=record[0]))
-
-            if len(ar_records_table):
-                dic_table_columns[table] = ar_records_table
-
-            # Close mysql connection
-            cursor.close()
-            connexion.close()
-
-            rf_db_engine_information.dic_table_columns = dic_table_columns
-
-            # Add db engine information for context
-            _dic_information_db_engines[EnumDbEngineType.RF_MYSQL] = rf_db_engine_information
+    @staticmethod
+    def add_column_table(class_vo_name: str = None, rf_column=None):
+        """
+        Method for add column table
+        :param class_vo_name: for add column
+        :param rf_column: to add
+        :return: None
+        """
+        if RFUtilsStr.is_not_emtpy(
+                class_vo_name) and class_vo_name in _dic_db_tables_information and rf_column is not None:
+            _dic_db_tables_information[class_vo_name].add_column(rf_column)
 
     @staticmethod
     def get_transaction_manager():
