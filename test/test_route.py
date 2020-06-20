@@ -1,0 +1,28 @@
+from routes.crud.rf_base_crud_route import RFBaseCrudRoute
+
+
+class TestForeRoute(RFBaseCrudRoute):
+
+    def __init__(self, rf_py_web=None):
+        RFBaseCrudRoute.__init__(self, rf_py_web=rf_py_web, path_requests='/test', service_name='testforebo')
+
+    def list(self):
+        response = None
+        response_bo = None
+        if self.service is not None:
+            from beans.query.filter import Filter
+            from beans.query.join import Join
+            from constants.enum_filter_type import EnumFilterType
+            from constants.enum_join_type import EnumJoinType
+
+            ar_filters = [Filter(field='testVoBis.code', value='03', filter_type=EnumFilterType.EQUAL)]
+            ar_joins = [Join(field="testVo", join_type=EnumJoinType.INNER_JOIN_FETCH),
+                        Join(field="testVoBis", join_type=EnumJoinType.INNER_JOIN_FETCH)]
+            # ar_joins = []
+
+            response_bo = self.service.list(ar_filters=ar_filters, ar_joins=ar_joins)
+
+        if response_bo is not None:
+            response = self.rf_py_web.json(response_bo)
+
+        return response

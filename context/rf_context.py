@@ -67,9 +67,28 @@ class RFContext:
         dic_columns = {}
 
         if RFUtilsStr.is_not_emtpy(vo_class_name) and vo_class_name in _dic_db_tables_information:
-            dic_columns = _dic_db_tables_information[vo_class_name]
+            dic_columns = _dic_db_tables_information[vo_class_name].get_columns()
 
         return dic_columns
+
+    @staticmethod
+    def get_column_table(vo_class_name: str = None, column_name: str = None):
+        """
+        Method for get column for table
+        :param vo_class_name: is a name for table to get columns
+        :param column_name column name for get
+        :return: column for table
+        """
+        rf_column = None
+
+        if RFUtilsStr.is_not_emtpy(vo_class_name) and RFUtilsStr.is_not_emtpy(
+                column_name) and vo_class_name in _dic_db_tables_information:
+            dic_columns = _dic_db_tables_information[vo_class_name].get_columns()
+
+            if dic_columns is not None and column_name in dic_columns:
+                rf_column = dic_columns[column_name]
+
+        return rf_column
 
     @staticmethod
     def add_table(vo_class_name):
@@ -79,19 +98,19 @@ class RFContext:
         :return: None
         """
         if vo_class_name is not None:
-            _dic_db_tables_information[vo_class_name] = RFDbTableInformation(vo_class_name)
+            _dic_db_tables_information[vo_class_name.__name__] = RFDbTableInformation(vo_class_name)
 
     @staticmethod
-    def add_column_table(class_vo_name: str = None, rf_column=None):
+    def add_column_table(vo_class_name: str = None, rf_column=None):
         """
         Method for add column table
-        :param class_vo_name: for add column
+        :param vo_class_name: for add column
         :param rf_column: to add
         :return: None
         """
         if RFUtilsStr.is_not_emtpy(
-                class_vo_name) and class_vo_name in _dic_db_tables_information and rf_column is not None:
-            _dic_db_tables_information[class_vo_name].add_column(rf_column)
+                vo_class_name) and vo_class_name in _dic_db_tables_information and rf_column is not None:
+            _dic_db_tables_information[vo_class_name].add_column(rf_column)
 
     @staticmethod
     def get_transaction_manager():
@@ -103,3 +122,15 @@ class RFContext:
         if _rf_transaction_manager is None:
             _rf_transaction_manager = RFTransactionManager()
         return _rf_transaction_manager
+
+    @staticmethod
+    def instance_vo(vo_class_name: str = None):
+        """
+        Method for instance vo
+        :param vo_class_name: for get instance
+        :return: instance vo if find
+        """
+        instance = None
+        if vo_class_name is not None and vo_class_name in _dic_db_tables_information:
+            instance = _dic_db_tables_information[vo_class_name].instance()
+        return instance

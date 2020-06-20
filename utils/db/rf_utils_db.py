@@ -1,10 +1,12 @@
 from utils.array.rf_utils_array import RFUtilsArray
-from utils.str.rf_utils_str import RFUtilsStr
+from utils.str.rf_utils_str import RFUtilsStr, DOT
 from transactions.enum_db_engine_type import EnumDbEngineType
 from constants.constants_associations import JOIN_ASSOCIATION_SEPARATOR, FIELD_TABLE_SEPARATOR, DEFAULT_ALIAS
 from constants.enum_join_type import EnumJoinType
 from constants.enum_filter_type import EnumFilterType
 from constants.enum_filter_operation_type import EnumFilterOperationType
+from context.rf_context import RFContext
+from utils.built.rf_utils_built import RFUtilsBuilt
 
 
 class RFUtilsDb:
@@ -34,13 +36,15 @@ class RFUtilsDb:
 
     @staticmethod
     def build_select_query(ar_fields_query=None, ar_joins_query=None,
-                           db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_default_fields_table=None):
+                           db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_default_fields_table=None,
+                           vo_class_name=None):
         """
         Method for build select query
         :param ar_fields_query: to get in query
         :param ar_joins_query: joins for query. Is necessary if has join is fetch
         :param db_engine_type for database
         :param ar_default_fields_table for table
+        :param vo_class_name for query
         :return: select query
         """
         query_builder = ""
@@ -61,13 +65,29 @@ class RFUtilsDb:
                     else:
                         query_builder = query_builder + " " + DEFAULT_ALIAS + "."
 
-                    query_builder = query_builder + field.name.strip()
+                    ar_field = RFUtilsStr.split(field.name, DOT)
+                    field_name = field.name
+                    field_name_alias = field.name
+                    rf_column = None
+                    old_vo_class_name = vo_class_name
+
+                    for field_ar in ar_field:
+                        rf_column = RFContext.get_column_table(vo_class_name=old_vo_class_name, column_name=field_ar)
+
+                        if rf_column is not None and RFUtilsStr.is_not_emtpy(rf_column.join_table):
+                            old_vo_class_name = rf_column.join_vo_class_name
+                            field_name = rf_column.column_name
+                            field_name_alias = field_name_alias + DOT + rf_column.join_table_column
+                        else:
+                            break
+
+                    query_builder = query_builder + field_name
 
                     if RFUtilsStr.is_not_emtpy(field.alias_field):
                         query_builder = query_builder + " " + field.alias_field.strip() + " "
                     else:
                         query_builder = query_builder + " " + \
-                                        field.name.strip() + " "
+                                        RFUtilsStr.replace(field_name_alias, DOT, FIELD_TABLE_SEPARATOR) + " "
 
                     first = False
 
@@ -75,10 +95,19 @@ class RFUtilsDb:
             elif RFUtilsArray.is_not_empty(ar_default_fields_table):
                 first = True
                 for field in ar_default_fields_table:
+
                     if not first:
                         query_builder = query_builder + " , "
-                    query_builder = query_builder + " " + DEFAULT_ALIAS + "." + field.name.strip() + " " + \
-                                    RFUtilsStr.replace(field.name.strip(), ".", FIELD_TABLE_SEPARATOR) + " "
+
+                    rf_column = RFContext.get_column_table(vo_class_name=vo_class_name, column_name=field.name)
+
+                    if RFUtilsStr.is_empty(rf_column.join_table):
+                        query_builder = query_builder + " " + DEFAULT_ALIAS + "." + field.name.strip() + " " + \
+                                        RFUtilsStr.replace(field.name.strip(), DOT, FIELD_TABLE_SEPARATOR) + " "
+                    else:
+                        query_builder = query_builder + " " + DEFAULT_ALIAS + "." + rf_column.join_table_column + " " + \
+                                        RFUtilsStr.replace(field.name.strip(), DOT,
+                                                           FIELD_TABLE_SEPARATOR) + rf_column.join_table_column + " "
 
                     first = False
 
@@ -87,20 +116,36 @@ class RFUtilsDb:
                 # For each join add if join fetch
                 ar_joins_fetch = [EnumJoinType.INNER_JOIN_FETCH, EnumJoinType.LEFT_JOIN_FETCH,
                                   EnumJoinType.RIGHT_JOIN_FETCH]
+
                 for join in ar_joins_query:
                     # Add join if fetch for join table. Only join for non alias table by the moment
-                    if join.join_type is not None and join.join_type in ar_joins_fetch and RFUtilsStr.is_not_emtpy(
-                            join.join_table) and RFUtilsStr.is_not_emtpy(join.join_field) and \
-                            RFUtilsStr.is_empty(join.join_alias):
-                        pass
-                        # ar_fields_join = RFContext.get_fields_table(join.join_table, self.db_engine_type)
-                        # if RFUtilsArray.is_not_empty(ar_fields_join):
-                        #     for field in ar_fields_join:
-                        #         query_builder = query_builder + ", " + self._table_name + \
-                        #                         JOIN_ASSOCIATION_SEPARATOR + join.join_field + "." + field.name \
-                        #                         + "  " + self._table_name \
-                        #                         + JOIN_ASSOCIATION_SEPARATOR + join.join_field \
-                        #                         + FIELD_TABLE_SEPARATOR + field.name
+                    if join.join_type in ar_joins_fetch:
+                        old_vo_class_name = vo_class_name
+                        ar_join_fields = RFUtilsStr.split(join.field, DOT)
+
+                        for join_field in ar_join_fields:
+                            rf_column = RFContext.get_column_table(vo_class_name=old_vo_class_name,
+                                                                   column_name=join_field)
+                            if rf_column is not None and RFUtilsStr.is_not_emtpy(rf_column.join_table) is True:
+                                old_vo_class_name = rf_column.join_vo_class_name
+
+                        ar_rf_columns = RFContext.get_columns_table(old_vo_class_name)
+
+                        field_alias = RFUtilsStr.replace(join.field, DOT, FIELD_TABLE_SEPARATOR)
+                        alias = DEFAULT_ALIAS + JOIN_ASSOCIATION_SEPARATOR + RFUtilsStr.replace(join.field, DOT,
+                                                                                                JOIN_ASSOCIATION_SEPARATOR)
+
+                        for key_rf_column_apply in ar_rf_columns:
+                            rf_column_apply = ar_rf_columns[key_rf_column_apply]
+                            query_builder = query_builder + " , "
+
+                            column_name = rf_column_apply.name if RFUtilsStr.is_empty(
+                                rf_column_apply.join_table) else rf_column_apply.column_name
+
+                            query_builder = query_builder + " " + alias + "." + column_name + " " + \
+                                            field_alias + FIELD_TABLE_SEPARATOR + column_name
+
+                            query_builder = query_builder + " "
 
         return query_builder
 
@@ -121,11 +166,13 @@ class RFUtilsDb:
         return query_builder
 
     @staticmethod
-    def build_joins_query(db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_joins_query=None):
+    def build_joins_query(db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_joins_query=None,
+                          vo_class_name=None):
         """
         Method for build join query
         :param db_engine_type: for build joins
         :param ar_joins_query: to build
+        :param vo_class_name for get columns and field
         :return: build whit joins
         """
         query_builder = ""
@@ -149,18 +196,39 @@ class RFUtilsDb:
                                 join.join_type == EnumJoinType.RIGHT_JOIN_FETCH:
                             join_type = " RIGHT JOIN "
 
-                        query_builder = query_builder + " " + join_type + " " + join.join_table
+                        join_table = None
+                        join_table_field = None
+                        ar_join_split_values = RFUtilsStr.split(join.field, DOT)
+                        column_name = None
+                        alias_join = RFUtilsStr.replace(join.field, DOT, JOIN_ASSOCIATION_SEPARATOR)
+                        vo_class_name_join = vo_class_name
+                        len_split_values = len(ar_join_split_values) - 1
+                        origin_alias_table = DEFAULT_ALIAS
 
-                        if RFUtilsStr.is_not_emtpy(join.join_alias):
-                            query_builder = query_builder + " AS " + join.join_alias
-                            query_builder = query_builder + " ON " + join.join_alias + "." + join.join_table_field \
-                                            + " = " + DEFAULT_ALIAS + "." + join.join_field
+                        for index, join_split_value in enumerate(ar_join_split_values):
+                            rf_column = RFContext.get_column_table(vo_class_name=vo_class_name_join,
+                                                                   column_name=join_split_value)
+                            vo_class_name_join = rf_column.join_vo_class_name
+                            join_table = rf_column.join_table
+                            join_table_field = rf_column.join_table_column
+                            column_name = rf_column.column_name
+
+                            if index != len_split_values:
+                                origin_alias_table = origin_alias_table + join_split_value
+
+                        query_builder = query_builder + " " + join_type + " " + join_table
+
+                        if RFUtilsStr.is_not_emtpy(join.alias):
+
+                            query_builder = query_builder + " AS " + join.alias
+                            query_builder = query_builder + " ON " + join.alias + "." + join_table_field \
+                                            + " = " + origin_alias_table + "." + column_name
                         else:
                             query_builder = query_builder + " AS " + DEFAULT_ALIAS + JOIN_ASSOCIATION_SEPARATOR + \
-                                            join.join_field + " "
+                                            alias_join + " "
                             query_builder = query_builder + " ON " + DEFAULT_ALIAS + JOIN_ASSOCIATION_SEPARATOR + \
-                                            join.join_field + "." + join.join_table_field \
-                                            + " = " + DEFAULT_ALIAS + "." + join.join_table_field
+                                            alias_join + "." + join_table_field \
+                                            + " = " + origin_alias_table + "." + column_name
 
         return query_builder
 
@@ -208,48 +276,61 @@ class RFUtilsDb:
                             counter = counter + 1
                             query_builder_partial = query_builder_partial + " ( "
 
-                        alias = filter_query.alias if RFUtilsStr.is_not_emtpy(filter_query.alias) else DEFAULT_ALIAS
+                        field_apply_query = filter_query.field
+
+                        if RFUtilsStr.contains(filter_query.field, DOT):
+                            ar_split_values_field = RFUtilsStr.split(filter_query.field, DOT)
+                            field_apply_query = ar_split_values_field[-1]
+                            ar_split_values_field.pop()
+                            alias = DEFAULT_ALIAS
+                            for value in ar_split_values_field:
+                                alias = alias + JOIN_ASSOCIATION_SEPARATOR + value
+                            alias = alias + DOT
+                        else:
+                            alias = filter_query.alias if RFUtilsStr.is_not_emtpy(filter_query.alias) else DEFAULT_ALIAS
+                            alias = alias + (DOT if RFUtilsStr.contains(filter_query.field, DOT) is False else "")
+
                         key_param = RFUtilsStr.unique_str()
 
                         # " = "
                         if filter_type == EnumFilterType.EQUAL:
                             dic_params_query[key_param] = filter_query.value
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + \
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + \
                                                     " =  %(" + key_param + ")s "
 
                         # " != "
                         elif filter_type == EnumFilterType.DISTINCT:
                             dic_params_query[key_param] = filter_query.value
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + \
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + \
                                                     " != %(" + key_param + ")s "
 
                         # " >= "
                         elif filter_type == EnumFilterType.GE:
                             dic_params_query[key_param] = filter_query.value
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + \
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + \
                                                     " >= %(" + key_param + ")s "
 
                         # " > "
                         elif filter_type == EnumFilterType.GT:
                             dic_params_query[key_param] = filter_query.value
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + \
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + \
                                                     " > %(" + key_param + ")s "
 
                         # " <= "
                         elif filter_type == EnumFilterType.LE:
                             dic_params_query[key_param] = filter_query.value
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + \
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + \
                                                     " <= %(" + key_param + ")s "
 
                         # " < "
                         elif filter_type == EnumFilterType.LT:
                             dic_params_query[key_param] = filter_query.value
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + \
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + \
                                                     " < %(" + key_param + ")s "
 
                         elif filter_type == EnumFilterType.IN or filter_type == EnumFilterType.NOT_IN:
                             filter_type_in = " IN " if filter_type == EnumFilterType.IN else " NOT IN"
-                            query_builder_partial = query_builder_partial + " " + alias + "." + filter_query.field + " "
+                            query_builder_partial = query_builder_partial + " " + alias + field_apply_query + " "
                             query_builder_partial = query_builder_partial + " " + filter_type_in
 
                             query_builder_partial = query_builder_partial + "( "
@@ -279,3 +360,51 @@ class RFUtilsDb:
                 query_builder = query_builder + " " + query_builder_partial
 
         return query_builder_where + " " + query_builder
+
+    @staticmethod
+    def fetch_value_query(vo_class_instance, ar_data):
+        """
+        Mehtod for fetch data in vo
+        :param vo_class_instance: class for vo
+        :param ar_data: to fetch
+        :return: ar data for fetches values
+        """
+        ar_response = []
+        if ar_data is not None:
+
+            for data in ar_data:
+
+                vo_instance = vo_class_instance()
+
+                for key in data:
+                    old_instance = vo_instance
+                    ar_key_split = RFUtilsStr.split(key, FIELD_TABLE_SEPARATOR)
+
+                    if RFUtilsArray.is_not_empty(ar_key_split):
+
+                        for field in ar_key_split:
+                            # Not use default alias
+                            if field == DEFAULT_ALIAS:
+                                continue
+                            if RFUtilsBuilt.has_attr(old_instance, field):
+                                old_tpm_instance = RFUtilsBuilt.get_attr(old_instance, field)
+
+                                if old_tpm_instance is None:
+                                    rf_column = RFContext.get_column_table(old_instance.__class__.__name__, field)
+                                    if rf_column is not None and RFUtilsStr.is_not_emtpy(
+                                            rf_column.join_vo_class_name) is True:
+                                        old_tpm_instance = RFContext.instance_vo(
+                                            vo_class_name=rf_column.join_vo_class_name)
+                                        RFUtilsBuilt.set_attr(old_instance, field, old_tpm_instance)
+                                        old_instance = old_tpm_instance
+                                    else:
+                                        RFUtilsBuilt.set_attr(old_instance, field, data[key])
+                                else:
+                                    old_instance = old_tpm_instance
+
+                            else:
+                                break
+
+                ar_response.append(vo_instance)
+
+        return ar_response

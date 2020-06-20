@@ -47,5 +47,7 @@ class RFTransaction:
                     response = cursor.fetchall()
                 else:
                     cursor = self.transaction_database.cursor()
+                    cursor.execute(query, dic_params_query)
+                    response = cursor.fetchall()
 
         return response

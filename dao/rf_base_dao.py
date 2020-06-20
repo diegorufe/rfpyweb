@@ -5,13 +5,7 @@
 """
 from transactions.enum_db_engine_type import EnumDbEngineType
 from utils.str.rf_utils_str import RFUtilsStr
-from utils.array.rf_utils_array import RFUtilsArray
-from constants.enum_join_type import EnumJoinType
-from constants.constants_associations import JOIN_ASSOCIATION_SEPARATOR, FIELD_TABLE_SEPARATOR, DEFAULT_ALIAS
 from context.rf_context import RFContext
-from utils.built.rf_utils_built import RFUtilsBuilt
-from constants.enum_filter_type import EnumFilterType
-from constants.enum_filter_operation_type import EnumFilterOperationType
 from beans.query.field import Field
 from utils.db.rf_utils_db import RFUtilsDb
 
@@ -94,27 +88,7 @@ class RFBaseDao:
 
         ar_data = rf_transaction.execute_list_query(query_builder, dic_params_query=dic_params_query)
 
-        ar_response = []
-
-        if ar_data is not None:
-            vo_instance = None
-            old_instance = None
-            for data in ar_data:
-
-                vo_instance = self.vo_class()
-
-                for key in data:
-                    old_instance = vo_instance
-                    ar_key_split = RFUtilsStr.split(key, FIELD_TABLE_SEPARATOR)
-
-                    if RFUtilsArray.is_not_empty(ar_key_split):
-
-                        for field in ar_key_split:
-                            if RFUtilsBuilt.has_attr(old_instance, field):
-                                RFUtilsBuilt.set_attr(old_instance, field, data[key])
-                                old_instance = RFUtilsBuilt.get_attr(old_instance, field)
-
-                ar_response.append(vo_instance)
+        ar_response = RFUtilsDb.fetch_value_query(self.vo_class, ar_data)
 
         return ar_response
 
@@ -138,7 +112,8 @@ class RFBaseDao:
         """
         return RFUtilsDb.build_select_query(ar_fields_query=ar_fields_query, ar_joins_query=ar_joins_query,
                                             db_engine_type=self.db_engine_type,
-                                            ar_default_fields_table=self._fields_table)
+                                            ar_default_fields_table=self._fields_table,
+                                            vo_class_name=self._vo_class_name)
 
     def __build_from_query__(self):
         """
@@ -153,7 +128,8 @@ class RFBaseDao:
         :param ar_joins_query: to build
         :return: joins for query
         """
-        return RFUtilsDb.build_joins_query(db_engine_type=self.db_engine_type, ar_joins_query=ar_joins_query)
+        return RFUtilsDb.build_joins_query(db_engine_type=self.db_engine_type, ar_joins_query=ar_joins_query,
+                                           vo_class_name=self._vo_class_name)
 
     def __build_where_query__(self, ar_filters_query=None, dic_params_query={}):
         """

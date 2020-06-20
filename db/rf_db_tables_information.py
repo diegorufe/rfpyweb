@@ -26,3 +26,10 @@ class RFDbTableInformation:
         :return: dic table columns information
         """
         return self.__dic_table_columns
+
+    def instance(self):
+        """
+        Method for instance vo
+        :return: vo
+        """
+        return self.class_vo()

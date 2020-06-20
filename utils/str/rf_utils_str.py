@@ -3,6 +3,15 @@ Utilities for str
 """
 import uuid
 
+"""
+Dot "."
+"""
+DOT = "."
+"""
+Low bar "_"
+"""
+LOW_BAR = "_"
+
 
 class RFUtilsStr:
 
@@ -69,4 +78,21 @@ class RFUtilsStr:
         result = None
         if RFUtilsStr.is_not_emtpy(text):
             result = text.replace(str_find_replace, str_replace_find)
+        return result
+
+    @staticmethod
+    def contains(text: str, str_find: str):
+        """
+        Method to check text contains data
+        :param text: to check
+        :param str_find: to find
+        :return: True if find str False if not
+        """
+        result = False
+        if RFUtilsStr.is_not_emtpy(text) and RFUtilsStr.is_not_emtpy(str_find):
+            try:
+                index = text.index(str_find)
+                result = True
+            except ValueError:
+                pass
         return result

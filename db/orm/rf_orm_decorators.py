@@ -27,17 +27,18 @@ def rf_table_decorator(table_name: str = None, pk_field: str = 'id'):
     return decorator_func
 
 
-def rf_column_decorator(name: str = None, join_property_name: str = None, join_column: str = None,
+def rf_column_decorator(name: str = None, column_name: str = None,
                         join_table: str = None, join_vo_class_name: str = None,
-                        join_table_column: str = 'id'):
+                        join_table_column: str = 'id', insertable: bool = True, updatable: bool = True):
     def decorator_func(cls):
         if cls is not None:
             # Add column for table in context
-            RFContext.add_column_table(cls.__name__,
-                                       RFColumn(name=name, join_property_name=join_property_name,
-                                                join_column=join_column,
-                                                join_table=join_table, join_vo_class_name=join_vo_class_name,
-                                                join_table_column=join_table_column))
+            RFContext.add_column_table(vo_class_name=cls.__name__,
+                                       rf_column=RFColumn(name=name, column_name=column_name,
+                                                          join_table=join_table,
+                                                          join_vo_class_name=join_vo_class_name,
+                                                          join_table_column=join_table_column, insertable=insertable,
+                                                          updatable=updatable))
 
         return cls
 

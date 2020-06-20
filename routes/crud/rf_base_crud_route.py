@@ -63,20 +63,4 @@ class RFBaseCrudRoute(RFBaseRoute):
         return self.rf_py_web.json(test="Read")
 
     def list(self):
-        response = None
-        response_bo = None
-        if self.service is not None:
-            from beans.query.filter import Filter
-            from beans.query.join import Join
-            from constants.enum_filter_type import EnumFilterType
-            from constants.enum_join_type import EnumJoinType
-
-            ar_filters = [Filter(field='descr', value='1', filter_type=EnumFilterType.EQUAL)]
-            ar_joins = [Join(join_table='test', join_field='testId', join_type=EnumJoinType.INNER_JOIN_FETCH)]
-
-            response_bo = self.service.list(ar_filters=ar_filters, ar_joins=ar_joins)
-
-        if response_bo is not None:
-            response = self.rf_py_web.json(response_bo)
-
-        return response
+        pass

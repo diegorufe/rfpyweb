@@ -17,7 +17,6 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
             transaction_propagated_created = False
 
             try:
-                response = None
                 time_ns = time.time_ns()
 
                 if ENABLE_LOG_TRANSACTION_DECORATOR:
@@ -59,7 +58,7 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 return response
             except Exception as ex:
 
-                # If trnsaction is not none execute rollback
+                # If transaction is not none execute rollback
                 if rf_transaction is not None:
                     RFContext.get_transaction_manager().rollback(rf_transaction)
 
