@@ -40,13 +40,22 @@ class RFBaseBo:
         return self.dao.edit(vo=vo, params=params, rf_transaction=rf_transaction, locale=locale)
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
-    def delete(self, ar_pks_values, params=None, rf_transaction=None, locale=None, ):
-        pass
+    def delete(self, ar_pks_values, params=None, rf_transaction=None, locale=None):
+        """
+        Method for delete vo by pks values
+        :param ar_pks_values:
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: number of records delete
+        """
+        return self.dao.delete(ar_pks_values=ar_pks_values, params=params,
+                               rf_transaction=rf_transaction, locale=locale)
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
-    def read(self, ar_pks_values, ar_joins=None, params=None, rf_transaction=None, locale=None, ):
+    def read(self, ar_pks_values, ar_joins=None, params=None, rf_transaction=None, locale=None):
         return self.dao.read(ar_pks_values=ar_pks_values, ar_joins=ar_joins, params=params,
-                             rf_transaction=rf_transaction)
+                             rf_transaction=rf_transaction, locale=locale)
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
     def count(self, ar_filters=None, ar_joins=None,

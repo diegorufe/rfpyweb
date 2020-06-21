@@ -75,6 +75,16 @@ class RFBaseCrudRoute(RFBaseRoute):
             """
             return self.edit()
 
+        @self.rf_py_web.route(self.path_requests + self.path_request_delete,
+                              endpoint=self.path_requests + self.path_request_delete, methods=[REQUEST_TYPE_GET])
+        @self.rf_py_web.secure_filter_decorator(self.path_requests + self.path_request_delete)
+        def delete_request():
+            """
+            Method for listen read request
+            :return: None
+            """
+            return self.delete()
+
     def read(self):
         pass
 
@@ -85,4 +95,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         pass
 
     def edit(self):
+        pass
+
+    def delete(self):
         pass

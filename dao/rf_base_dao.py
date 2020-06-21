@@ -13,6 +13,7 @@ from utils.db.rf_utils_db import RFUtilsDb
 from utils.built.rf_utils_built import RFUtilsBuilt
 from utils.array.rf_utils_array import RFUtilsArray
 import datetime
+from constants.constants_associations import DEFAULT_ALIAS
 
 
 class RFBaseDao:
@@ -108,14 +109,7 @@ class RFBaseDao:
         :param locale:
         :return:
         """
-        ar_filters = []
-        for index, pk in enumerate(self.vo_class.__ar_pk_fields__):
-            rf_column = RFContext.get_column_table(self.vo_class.__name__, pk)
-
-            if RFUtilsStr.is_not_emtpy(rf_column.join_table):
-                ar_filters.append(Filter(field=pk + DOT + rf_column.column_name, value=ar_pks_values[index]))
-            else:
-                ar_filters.append(Filter(field=pk, value=ar_pks_values[index]))
+        ar_filters = self.__get_pk_filters__(ar_pks_values)
         limit = Limit(0, 1)
         result_list = self.list(ar_filters=ar_filters, ar_joins=ar_joins, limit=limit, rf_transaction=rf_transaction)
 
@@ -124,7 +118,30 @@ class RFBaseDao:
         return result
 
     def delete(self, ar_pks_values, params=None, rf_transaction=None, locale=None):
-        pass
+        """
+        Method for delete vo for pk values
+        :param ar_pks_values:
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: number of records delete
+        """
+        dic_params_query = {}
+        ar_filters = self.__get_pk_filters__(ar_pks_values)
+
+        query_builder_delete = "DELETE " + DEFAULT_ALIAS + " "
+
+        # Build from
+        query_builder_form = self.__build_from_query__()
+
+        # Build where
+        query_builder_where = self.__build_where_query__(ar_filters_query=ar_filters, dic_params_query=dic_params_query)
+
+        query_builder = query_builder_delete + query_builder_form + query_builder_where
+
+        result = rf_transaction.execute_query(query_builder, dic_params_query=dic_params_query)
+
+        return result
 
     def count(self, ar_filters=None, ar_joins=None,
               params=None, rf_transaction=None, locale=None):
@@ -155,7 +172,7 @@ class RFBaseDao:
 
         result = rf_transaction.execute_query(query_builder, dic_params_query=dic_params_query)
 
-        return result[0]
+        return result
 
     def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limit=None,
              params=None, rf_transaction=None, locale=None):
@@ -277,3 +294,19 @@ class RFBaseDao:
         :return: instance vo
         """
         return self.vo_class()
+
+    def __get_pk_filters__(self, ar_pks_values):
+        """
+        Method for get pk filters
+        :param ar_pks_values: to set in filters
+        :return: array pk filters
+        """
+        ar_filters = []
+        for index, pk in enumerate(self.vo_class.__ar_pk_fields__):
+            rf_column = RFContext.get_column_table(self.vo_class.__name__, pk)
+
+            if RFUtilsStr.is_not_emtpy(rf_column.join_table):
+                ar_filters.append(Filter(field=pk + DOT + rf_column.column_name, value=ar_pks_values[index]))
+            else:
+                ar_filters.append(Filter(field=pk, value=ar_pks_values[index]))
+        return ar_filters
