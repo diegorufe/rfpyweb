@@ -8,6 +8,8 @@ from utils.str.rf_utils_str import RFUtilsStr
 from context.rf_context import RFContext
 from beans.query.field import Field
 from utils.db.rf_utils_db import RFUtilsDb
+from utils.built.rf_utils_built import RFUtilsBuilt
+import datetime
 
 
 class RFBaseDao:
@@ -49,19 +51,52 @@ class RFBaseDao:
         return self._vo_class_name
 
     def add(self, vo, params=None, rf_transaction=None, locale=None):
-        pass
+        """
+        Method for add in query
+        :param vo: to add
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: vo inserted
+        """
+        # Audit create vo
+        if RFUtilsBuilt.has_attr(vo, "createdAt"):
+            RFUtilsBuilt.set_attr(vo, "createdAt", datetime.datetime.now())
+
+        # Audit update vo
+        if RFUtilsBuilt.has_attr(vo, "updatedAt"):
+            RFUtilsBuilt.set_attr(vo, "updatedAt", datetime.datetime.now())
+
+        dic_params_query = {}
+        query_builder_insert = RFUtilsDb.build_insert_query(vo_instance=vo, dic_params_query=dic_params_query)
+        result = rf_transaction.execute_query(query_builder_insert, dic_params_query=dic_params_query, insert=True)
+
+        # set latest pk inserted
+        if len(vo.__ar_pk_fields__) == 1:
+            RFUtilsBuilt.set_attr(vo, vo.__ar_pk_fields__[0], result)
+
+        return vo
 
     def edit(self, vo, params=None, rf_transaction=None, locale=None):
         pass
 
-    def read(self, id, ar_joins=None, params=None, rf_transaction=None, locale=None):
+    def read(self, ar_pks_values, ar_joins=None, params=None, rf_transaction=None, locale=None):
         pass
 
-    def delete(self, id, params=None, rf_transaction=None, locale=None):
+    def delete(self, ar_pks_values, params=None, rf_transaction=None, locale=None):
         pass
 
     def count(self, ar_filters=None, ar_joins=None,
               params=None, rf_transaction=None, locale=None):
+        """
+        Method for count data for database
+        :param ar_filters:
+        :param ar_joins:
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: count registers
+        """
         dic_params_query = {}
 
         # Build select
@@ -84,7 +119,19 @@ class RFBaseDao:
 
     def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limit=None,
              params=None, rf_transaction=None, locale=None):
-
+        """
+        Method for list query
+        :param ar_fields:
+        :param ar_filters:
+        :param ar_joins:
+        :param ar_orders:
+        :param ar_groups:
+        :param limit:
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: list of query
+        """
         dic_params_query = {}
 
         # Build select
@@ -182,3 +229,11 @@ class RFBaseDao:
         :return: build limit query
         """
         return RFUtilsDb.build_limit(limit=limit, dic_params_query=dic_params_query)
+
+    def new_instance_vo(self, rf_transaction=None):
+        """
+        Method for build new instance vo
+        :param rf_transaction:
+        :return: instance vo
+        """
+        return self.vo_class()

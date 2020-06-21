@@ -29,12 +29,13 @@ class RFTransaction:
         """
         return self.execute_query(query, dic_params_query=dic_params_query, list_query=True)
 
-    def execute_query(self, query, dic_params_query=None, list_query=False):
+    def execute_query(self, query, dic_params_query=None, list_query=False, insert=False):
         """
         Method for execute query
         :param query: to execute
         :param dic_params_query: for query
         :param list_query: is list query
+        :param insert: is insert query
         :return: response for query
         """
         response = None
@@ -48,6 +49,6 @@ class RFTransaction:
                 else:
                     cursor = self.transaction_database.cursor()
                     cursor.execute(query, dic_params_query)
-                    response = cursor.fetchall()
+                    response = cursor.lastrowid
 
         return response

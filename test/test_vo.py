@@ -2,7 +2,7 @@ from vo.rf_base_audit_vo import RFBaseAuditVo
 from db.orm.rf_orm_decorators import rf_table_decorator, rf_column_decorator
 
 
-@rf_column_decorator(name='id')
+@rf_column_decorator(name='id', insertable=False, updatable=False)
 @rf_column_decorator(name='code')
 @rf_column_decorator(name='updatedAt')
 @rf_column_decorator(name='createdAt')
@@ -15,7 +15,7 @@ class TestVo(RFBaseAuditVo):
         self.code = None
 
 
-@rf_column_decorator(name='id')
+@rf_column_decorator(name='id', insertable=False, updatable=False)
 @rf_column_decorator(name='descr')
 @rf_column_decorator(name='amount')
 @rf_column_decorator(name='updatedAt')

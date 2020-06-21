@@ -2,11 +2,11 @@ from context.rf_context import RFContext
 from db.rf_column import RFColumn
 
 
-def rf_table_decorator(table_name: str = None, pk_field: str = 'id'):
+def rf_table_decorator(table_name: str = None, ar_pk_fields=['id']):
     """
     Decorator for ser the table for class
     :param table_name: for class
-    :param pk_field: for class
+    :param ar_pk_fields: for class
     :return: class to decorate
     """
 
@@ -16,8 +16,8 @@ def rf_table_decorator(table_name: str = None, pk_field: str = 'id'):
             if cls.__table_name__ is None:
                 cls.__table_name__ = table_name
             # Set pk for field
-            if cls.__pk_field__ is None:
-                cls.__pk_field__ = pk_field
+            if cls.__ar_pk_fields__ is None:
+                cls.__ar_pk_fields__ = ar_pk_fields
 
             # add table for context
             RFContext.add_table(cls)

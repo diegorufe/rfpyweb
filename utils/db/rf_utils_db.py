@@ -463,3 +463,56 @@ class RFUtilsDb:
                 ar_response.append(vo_instance)
 
         return ar_response
+
+    @staticmethod
+    def build_insert_query(vo_instance=None, dic_params_query={}):
+        """
+        Method for insert build query
+        :param table_name: for build insert query
+        :param vo_instance: for build insert query
+        :param dic_params_query: for build params
+        :return: query for insert
+        """
+        query_builder = "INSERT INTO " + vo_instance.__table_name__ + " "
+        query_builder_columns = ""
+        query_builder_values = ""
+
+        dic_rf_columns = RFContext.get_columns_table(vo_instance.__class__.__name__)
+        first: bool = True
+
+        for key, rf_column in dic_rf_columns.items():
+
+            if rf_column.insertable:
+
+                column_value = None
+
+                if first is not True:
+                    query_builder_columns = query_builder_columns + " , "
+                    query_builder_values = query_builder_values + " , "
+
+                column_name = rf_column.column_name if RFUtilsStr.is_not_emtpy(rf_column.join_table) else rf_column.name
+
+                query_builder_columns = query_builder_columns + column_name
+
+                if RFUtilsStr.is_not_emtpy(rf_column.join_table):
+                    join_instance = RFUtilsBuilt.get_attr(vo_instance, rf_column.name)
+                    if join_instance is not None:
+                        column_value = RFUtilsBuilt.get_attr(join_instance, rf_column.join_table_column)
+                else:
+                    column_value = RFUtilsBuilt.get_attr(vo_instance, column_name)
+
+                dic_params_query[column_name] = column_value
+                query_builder_values = query_builder_values + " %(" + column_name + ")s "
+                first = False
+
+        # Build columns
+        query_builder = query_builder + " ( "
+        query_builder = query_builder + query_builder_columns
+        query_builder = query_builder + " ) "
+
+        # Build values
+        query_builder = query_builder + " VALUES ( "
+        query_builder = query_builder + query_builder_values
+        query_builder = query_builder + " ) "
+
+        return query_builder

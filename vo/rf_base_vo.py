@@ -11,4 +11,4 @@ class RFBaseVo:
     # Dic columns for entity
     __dic_columns__ = {}
     # Pk for database
-    __pk_field__ = None
+    __ar_pk_fields__ = None

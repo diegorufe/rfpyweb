@@ -55,6 +55,16 @@ class RFBaseCrudRoute(RFBaseRoute):
             """
             return self.list()
 
+        @self.rf_py_web.route(self.path_requests + self.path_request_add,
+                              endpoint=self.path_requests + self.path_request_add, methods=[REQUEST_TYPE_GET])
+        @self.rf_py_web.secure_filter_decorator(self.path_requests + self.path_request_add)
+        def add_request():
+            """
+            Method for listen read request
+            :return: None
+            """
+            return self.add()
+
     def read(self):
         """
         Method for execute read crud operation
@@ -63,4 +73,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         return self.rf_py_web.json(test="Read")
 
     def list(self):
+        pass
+
+    def add(self):
         pass

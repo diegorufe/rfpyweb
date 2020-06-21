@@ -1,4 +1,5 @@
 from routes.crud.rf_base_crud_route import RFBaseCrudRoute
+from decimal import Decimal
 
 
 class TestForeRoute(RFBaseCrudRoute):
@@ -28,3 +29,16 @@ class TestForeRoute(RFBaseCrudRoute):
             response = self.rf_py_web.json(response_bo)
 
         return response
+
+    def add(self):
+        from test.test_vo import TestVo
+        vo = self.service.new_instance_vo()
+
+        vo.descr = 'asd'
+        vo.amount = Decimal("14.453")
+        vo.testVo = TestVo()
+        vo.testVo.id = 2
+
+        self.service.add(vo)
+
+        return self.rf_py_web.json(vo)
