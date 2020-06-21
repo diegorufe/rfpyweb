@@ -4,7 +4,7 @@
 
 """
 from transactions.enum_transaction_type import EnumTransactionType
-from constants.constants_log import ENABLE_LOG_TRANSACTION_DECORATOR
+from core.constants.rf_core_constants import APP_ENABLE_LOG_TRANSACTION_DECORATOR
 from context.rf_context import RFContext
 import time
 
@@ -19,7 +19,7 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
             try:
                 time_ns = time.time_ns()
 
-                if ENABLE_LOG_TRANSACTION_DECORATOR:
+                if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
                     print("Transaction type: " + str(enum_transaction_type))
 
                 #  EnumTransactionType.PROPAGATED
@@ -50,7 +50,7 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 if transaction_propagated_created is True or enum_transaction_type == EnumTransactionType.REQUIRED_NEW:
                     RFContext.get_transaction_manager().commit(rf_transaction)
 
-                if ENABLE_LOG_TRANSACTION_DECORATOR:
+                if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
                     time_ns = time.time_ns() - time_ns
                     print("Time execute transaction in in function " + str(f.__name__) + ", for class " + str(
                         self) + ", ns: ", str(time_ns))
@@ -62,7 +62,7 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 if rf_transaction is not None:
                     RFContext.get_transaction_manager().rollback(rf_transaction)
 
-                if ENABLE_LOG_TRANSACTION_DECORATOR:
+                if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
                     print("Error in function  " + str(f.__name__) + ", for class " + str(self))
                     print("Error in Transaction type: " + str(enum_transaction_type))
                     print("Error transaction decorator " + str(ex))

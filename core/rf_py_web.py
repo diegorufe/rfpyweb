@@ -9,6 +9,7 @@ from security.enum_secury_auth_mode import EnumSecurityAuthMode
 from transactions.enum_db_engine_type import EnumDbEngineType
 from context.rf_context import RFContext
 from flask import json
+from converters.rf_json_converter import rf_data_to_json_converter
 
 
 class RFPyWeb(Flask):
@@ -85,7 +86,7 @@ class RFPyWeb(Flask):
         :param data to convert
         :return: data convert to json
         """
-        return json.dumps(data, default=lambda o: o.__dict__,
+        return json.dumps(data, default=rf_data_to_json_converter,
                           sort_keys=True)
 
     def jsonify(self, *args, **kwargs):

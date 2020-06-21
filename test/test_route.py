@@ -12,15 +12,17 @@ class TestForeRoute(RFBaseCrudRoute):
         if self.service is not None:
             from beans.query.filter import Filter
             from beans.query.join import Join
-            from constants.enum_filter_type import EnumFilterType
-            from constants.enum_join_type import EnumJoinType
+            from constants.query.enum_filter_type import EnumFilterType
+            from constants.query.enum_join_type import EnumJoinType
+            from beans.query.order import Order
 
             ar_filters = [Filter(field='testVoBis.code', value='03', filter_type=EnumFilterType.EQUAL)]
             ar_joins = [Join(field="testVo", join_type=EnumJoinType.INNER_JOIN_FETCH),
                         Join(field="testVoBis", join_type=EnumJoinType.INNER_JOIN_FETCH)]
+            ar_orders = [Order(field="testVoBis.code")]
             # ar_joins = []
-
-            response_bo = self.service.list(ar_filters=ar_filters, ar_joins=ar_joins)
+            # count = self.service.count(ar_filters=ar_filters, ar_joins=ar_joins)
+            response_bo = self.service.list(ar_filters=ar_filters, ar_joins=ar_joins, ar_orders=ar_orders)
 
         if response_bo is not None:
             response = self.rf_py_web.json(response_bo)

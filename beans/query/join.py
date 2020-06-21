@@ -1,4 +1,4 @@
-from constants.enum_join_type import EnumJoinType
+from constants.query.enum_join_type import EnumJoinType
 
 
 class Join:

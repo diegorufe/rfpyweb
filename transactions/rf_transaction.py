@@ -27,9 +27,9 @@ class RFTransaction:
         :param dic_params_query:
         :return:
         """
-        return self.__execute_query__(query, dic_params_query=dic_params_query, list_query=True)
+        return self.execute_query(query, dic_params_query=dic_params_query, list_query=True)
 
-    def __execute_query__(self, query, dic_params_query=None, list_query=False):
+    def execute_query(self, query, dic_params_query=None, list_query=False):
         """
         Method for execute query
         :param query: to execute

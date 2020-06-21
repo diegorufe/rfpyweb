@@ -32,10 +32,16 @@ class RFBaseBo:
         pass
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
-    def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limits=None,
+    def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limit=None,
              params=None, rf_transaction=None, locale=None, ):
         return self.dao.list(ar_fields=ar_fields, ar_filters=ar_filters, ar_joins=ar_joins,
                              ar_orders=ar_orders,
                              ar_groups=ar_groups,
-                             limits=limits,
+                             limit=limit,
                              params=params, rf_transaction=rf_transaction, locale=locale)
+
+    @transaction_decorator(EnumTransactionType.PROPAGATED)
+    def count(self, ar_filters=None, ar_joins=None,
+              params=None, rf_transaction=None, locale=None):
+        return self.dao.count(ar_filters=ar_filters, ar_joins=ar_joins, params=params, rf_transaction=rf_transaction,
+                              locale=locale)

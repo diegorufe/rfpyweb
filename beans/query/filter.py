@@ -1,5 +1,5 @@
-from constants.enum_filter_type import EnumFilterType
-from constants.enum_filter_operation_type import EnumFilterOperationType
+from constants.query.enum_filter_type import EnumFilterType
+from constants.query.enum_filter_operation_type import EnumFilterOperationType
 
 
 class Filter:

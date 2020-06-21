@@ -2,11 +2,14 @@ from utils.array.rf_utils_array import RFUtilsArray
 from utils.str.rf_utils_str import RFUtilsStr, DOT
 from transactions.enum_db_engine_type import EnumDbEngineType
 from constants.constants_associations import JOIN_ASSOCIATION_SEPARATOR, FIELD_TABLE_SEPARATOR, DEFAULT_ALIAS
-from constants.enum_join_type import EnumJoinType
-from constants.enum_filter_type import EnumFilterType
-from constants.enum_filter_operation_type import EnumFilterOperationType
+from constants.query.enum_join_type import EnumJoinType
+from constants.query.enum_filter_type import EnumFilterType
+from constants.query.enum_filter_operation_type import EnumFilterOperationType
 from context.rf_context import RFContext
 from utils.built.rf_utils_built import RFUtilsBuilt
+from constants.query.enum_order_type import EnumOrderType
+from beans.query.limit import Limit
+from core.constants.rf_core_constants import APP_DEFAULT_LIMIT_END_QUERY
 
 
 class RFUtilsDb:
@@ -360,6 +363,58 @@ class RFUtilsDb:
                 query_builder = query_builder + " " + query_builder_partial
 
         return query_builder_where + " " + query_builder
+
+    @staticmethod
+    def build_order_query(ar_orders=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL):
+        query_builder = ""
+
+        if RFUtilsArray.is_not_empty(ar_orders):
+
+            if db_engine_type == EnumDbEngineType.RF_MYSQL:
+                first: bool = True
+
+                query_builder = " ORDER BY "
+
+                for order in ar_orders:
+                    if first is not True:
+                        query_builder = query_builder + " , "
+
+                    alias = order.alias if RFUtilsStr.is_not_emtpy(order.alias) else DEFAULT_ALIAS
+
+                    ar_split_values = RFUtilsStr.split(order.field, DOT)
+                    len_split_values = len(ar_split_values)
+
+                    for index, order_value in enumerate(ar_split_values):
+
+                        if index < len_split_values - 1:
+                            alias = alias + JOIN_ASSOCIATION_SEPARATOR + order_value
+
+                    query_builder = query_builder + alias + DOT + ar_split_values.pop() + " " + (
+                        "ASC" if order.order_type == EnumOrderType.ASC else "DESC") + " "
+
+                    first = False
+
+        return query_builder
+
+    @staticmethod
+    def build_limit(limit, dic_params_query={}):
+        """
+        Method for build limit
+        :param limit: to set in query
+        :param dic_params_query: to set star end limit query
+        :return: builder with limit
+        """
+        if limit is None:
+            limit = Limit(start=0, end=APP_DEFAULT_LIMIT_END_QUERY)
+
+        start = limit.start if limit.start is not None and limit.start > 0 else 0
+        end = limit.end if limit.end is not None and limit.end > 0 else APP_DEFAULT_LIMIT_END_QUERY
+
+        query_builder = " LIMIT  %(limitStart)s , %(limitEnd)s "
+        dic_params_query["limitStart"] = start
+        dic_params_query["limitEnd"] = end
+
+        return query_builder
 
     @staticmethod
     def fetch_value_query(vo_class_instance, ar_data):

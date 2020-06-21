@@ -60,7 +60,29 @@ class RFBaseDao:
     def delete(self, id, params=None, rf_transaction=None, locale=None):
         pass
 
-    def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limits=None,
+    def count(self, ar_filters=None, ar_joins=None,
+              params=None, rf_transaction=None, locale=None):
+        dic_params_query = {}
+
+        # Build select
+        query_builder_select = "SELECT COUNT(*) "
+
+        # Build from
+        query_builder_form = self.__build_from_query__()
+
+        # Build joins
+        query_builder_joins = self.__build_joins_query__(ar_joins)
+
+        # Build where
+        query_builder_where = self.__build_where_query__(ar_filters_query=ar_filters, dic_params_query=dic_params_query)
+
+        query_builder = query_builder_select + query_builder_form + query_builder_joins + query_builder_where
+
+        result = rf_transaction.execute_query(query_builder, dic_params_query=dic_params_query)
+
+        return result[0]
+
+    def list(self, ar_fields=None, ar_filters=None, ar_joins=None, ar_orders=None, ar_groups=None, limit=None,
              params=None, rf_transaction=None, locale=None):
 
         dic_params_query = {}
@@ -79,12 +101,15 @@ class RFBaseDao:
         query_builder_where = self.__build_where_query__(ar_filters_query=ar_filters, dic_params_query=dic_params_query)
 
         # Build groupby
-
+        # TODO
         # Build orderby
+        query_builder_order = self.__build_order_query__(ar_orders=ar_orders)
 
         # Build limit
+        query_builder_limit = self.__build_limit__(limit=limit, dic_params_query=dic_params_query)
 
-        query_builder = query_builder_select + query_builder_form + query_builder_joins + query_builder_where
+        query_builder = query_builder_select + query_builder_form + query_builder_joins + query_builder_where + \
+                        query_builder_order + query_builder_limit
 
         ar_data = rf_transaction.execute_list_query(query_builder, dic_params_query=dic_params_query)
 
@@ -140,3 +165,20 @@ class RFBaseDao:
         """
         return RFUtilsDb.build_where_query(ar_filters_query=ar_filters_query, dic_params_query=dic_params_query,
                                            db_engine_type=self.db_engine_type)
+
+    def __build_order_query__(self, ar_orders=None):
+        """
+        Method for build order query
+        :param ar_orders:  orders for build
+        :return: order query
+        """
+        return RFUtilsDb.build_order_query(ar_orders=ar_orders, db_engine_type=self.db_engine_type)
+
+    def __build_limit__(self, limit=None, dic_params_query={}):
+        """
+        Method for muild limit
+        :param limit: to build
+        :param dic_params_query: to set limit query
+        :return: build limit query
+        """
+        return RFUtilsDb.build_limit(limit=limit, dic_params_query=dic_params_query)
