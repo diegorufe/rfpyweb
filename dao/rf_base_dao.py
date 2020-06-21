@@ -193,7 +193,7 @@ class RFBaseDao:
         query_builder_order = self.__build_order_query__(ar_orders=ar_orders)
 
         # Build limit
-        query_builder_limit = self.__build_limit__(limit=limit, dic_params_query=dic_params_query)
+        query_builder_limit = self.__build_limit_query__(limit=limit, dic_params_query=dic_params_query)
 
         query_builder = query_builder_select + query_builder_form + query_builder_joins + query_builder_where + \
                         query_builder_order + query_builder_limit
@@ -261,7 +261,7 @@ class RFBaseDao:
         """
         return RFUtilsDb.build_order_query(ar_orders=ar_orders, db_engine_type=self.db_engine_type)
 
-    def __build_limit__(self, limit=None, dic_params_query={}):
+    def __build_limit_query__(self, limit=None, dic_params_query={}):
         """
         Method for muild limit
         :param limit: to build
