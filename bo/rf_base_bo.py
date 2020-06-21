@@ -29,7 +29,15 @@ class RFBaseBo:
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
     def edit(self, vo, params=None, rf_transaction=None, locale=None, ):
-        pass
+        """
+        Method for edit vo
+        :param vo: to edit
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: vo edited
+        """
+        return self.dao.edit(vo=vo, params=params, rf_transaction=rf_transaction, locale=locale)
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
     def delete(self, ar_pks_values, params=None, rf_transaction=None, locale=None, ):
@@ -37,7 +45,8 @@ class RFBaseBo:
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
     def read(self, ar_pks_values, ar_joins=None, params=None, rf_transaction=None, locale=None, ):
-        pass
+        return self.dao.read(ar_pks_values=ar_pks_values, ar_joins=ar_joins, params=params,
+                             rf_transaction=rf_transaction)
 
     @transaction_decorator(EnumTransactionType.PROPAGATED)
     def count(self, ar_filters=None, ar_joins=None,

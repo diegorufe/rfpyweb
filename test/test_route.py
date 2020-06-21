@@ -42,3 +42,23 @@ class TestForeRoute(RFBaseCrudRoute):
         self.service.add(vo)
 
         return self.rf_py_web.json(vo)
+
+    def edit(self):
+        from test.test_vo import TestVo
+        ar_pks_values = [7]
+        vo = self.service.read(ar_pks_values)
+        vo.id = 6
+
+        vo.descr = 'asd'
+        vo.amount = Decimal("20.453")
+        vo.testVo = TestVo()
+        vo.testVo.id = 1
+
+        self.service.edit(vo)
+
+        return self.rf_py_web.json(vo)
+
+    def read(self):
+        ar_pks_values = [5]
+        vo = self.service.read(ar_pks_values)
+        return self.rf_py_web.json(vo)

@@ -516,3 +516,71 @@ class RFUtilsDb:
         query_builder = query_builder + " ) "
 
         return query_builder
+
+    @staticmethod
+    def build_update_query(vo_instance=None, dic_params_query={}):
+        """
+        Method for build update query
+        :param vo_instance: to update
+        :param dic_params_query: to set update query
+        :return:to get build query
+        """
+        query_builder = "UPDATE " + vo_instance.__table_name__ + " "
+
+        dic_rf_columns = RFContext.get_columns_table(vo_instance.__class__.__name__)
+        first: bool = True
+
+        for key, rf_column in dic_rf_columns.items():
+
+            if rf_column.updatable:
+
+                column_value = None
+
+                if first is not True:
+                    query_builder = query_builder + " , "
+                else:
+                    query_builder = query_builder + " SET "
+
+                column_name = rf_column.column_name if RFUtilsStr.is_not_emtpy(rf_column.join_table) else rf_column.name
+
+                if RFUtilsStr.is_not_emtpy(rf_column.join_table):
+                    join_instance = RFUtilsBuilt.get_attr(vo_instance, rf_column.name)
+                    if join_instance is not None:
+                        column_value = RFUtilsBuilt.get_attr(join_instance, rf_column.join_table_column)
+                else:
+                    column_value = RFUtilsBuilt.get_attr(vo_instance, column_name)
+
+                query_builder = query_builder + " " + column_name + " = "
+                dic_params_query[column_name] = column_value
+                query_builder = query_builder + " %(" + column_name + ")s "
+
+                first = False
+
+        query_builder = query_builder + " WHERE "
+
+        first: bool = True
+
+        for pk in vo_instance.__ar_pk_fields__:
+            if first is not True:
+                query_builder = query_builder + " AND "
+
+            column_value = None
+
+            rf_column = RFContext.get_column_table(vo_instance.__class__.__name__, pk)
+
+            column_name = rf_column.column_name if RFUtilsStr.is_not_emtpy(rf_column.join_table) else rf_column.name
+
+            if RFUtilsStr.is_not_emtpy(rf_column.join_table):
+                join_instance = RFUtilsBuilt.get_attr(vo_instance, rf_column.name)
+                if join_instance is not None:
+                    column_value = RFUtilsBuilt.get_attr(join_instance, rf_column.join_table_column)
+            else:
+                column_value = RFUtilsBuilt.get_attr(vo_instance, column_name)
+
+            query_builder = query_builder + " " + column_name + " = "
+            dic_params_query["keyPK_" + pk] = column_value
+            query_builder = query_builder + " %(" + "keyPK_" + pk + ")s "
+
+            first = False
+
+        return query_builder

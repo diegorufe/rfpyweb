@@ -27,6 +27,7 @@ class RFUtilsBuilt:
         result = None
         if RFUtilsBuilt.has_attr(object_attr, attr):
             result = getattr(object_attr, attr)
+            
         return result
 
     @staticmethod

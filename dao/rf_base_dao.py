@@ -4,11 +4,14 @@
 
 """
 from transactions.enum_db_engine_type import EnumDbEngineType
-from utils.str.rf_utils_str import RFUtilsStr
+from utils.str.rf_utils_str import RFUtilsStr, DOT
 from context.rf_context import RFContext
 from beans.query.field import Field
+from beans.query.filter import Filter
+from beans.query.limit import Limit
 from utils.db.rf_utils_db import RFUtilsDb
 from utils.built.rf_utils_built import RFUtilsBuilt
+from utils.array.rf_utils_array import RFUtilsArray
 import datetime
 
 
@@ -78,10 +81,47 @@ class RFBaseDao:
         return vo
 
     def edit(self, vo, params=None, rf_transaction=None, locale=None):
-        pass
+        """
+        Method for edit vo
+        :param vo: to edit
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return: vo edited
+        """
+        # Audit update vo
+        if RFUtilsBuilt.has_attr(vo, "updatedAt"):
+            RFUtilsBuilt.set_attr(vo, "updatedAt", datetime.datetime.now())
+
+        dic_params_query = {}
+        query_builder_update = RFUtilsDb.build_update_query(vo_instance=vo, dic_params_query=dic_params_query)
+        rf_transaction.execute_query(query_builder_update, dic_params_query=dic_params_query)
+        return vo
 
     def read(self, ar_pks_values, ar_joins=None, params=None, rf_transaction=None, locale=None):
-        pass
+        """
+        Method for read vo
+        :param ar_pks_values: for vo
+        :param ar_joins:
+        :param params:
+        :param rf_transaction:
+        :param locale:
+        :return:
+        """
+        ar_filters = []
+        for index, pk in enumerate(self.vo_class.__ar_pk_fields__):
+            rf_column = RFContext.get_column_table(self.vo_class.__name__, pk)
+
+            if RFUtilsStr.is_not_emtpy(rf_column.join_table):
+                ar_filters.append(Filter(field=pk + DOT + rf_column.column_name, value=ar_pks_values[index]))
+            else:
+                ar_filters.append(Filter(field=pk, value=ar_pks_values[index]))
+        limit = Limit(0, 1)
+        result_list = self.list(ar_filters=ar_filters, ar_joins=ar_joins, limit=limit, rf_transaction=rf_transaction)
+
+        result = result_list[0] if RFUtilsArray.is_not_empty(result_list) else None
+
+        return result
 
     def delete(self, ar_pks_values, params=None, rf_transaction=None, locale=None):
         pass
