@@ -3,7 +3,6 @@
 """
 from transactions.transaction_decorator import transaction_decorator
 from transactions.enum_transaction_type import EnumTransactionType
-from transactions.rf_transaction_manager import RFTransactionManager
 
 
 class RFBaseBo:
@@ -102,3 +101,17 @@ class RFBaseBo:
         :return: instance vo
         """
         return self.dao.new_instance_vo(rf_transaction=rf_transaction)
+
+    def vo_class(self):
+        """
+        Method for get vo class
+        :return: vo class
+        """
+        return self.dao.vo_class
+
+    def vo_class_name(self):
+        """
+        Method for get vo class name
+        :return: vo class name
+        """
+        return self.vo_class().__name__

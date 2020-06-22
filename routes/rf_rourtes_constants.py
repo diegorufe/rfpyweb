@@ -39,6 +39,10 @@ DEFAULT_PATH_REQUEST_EDIT = "/edit"
 """
 DEFAULT_PATH_REQUEST_LIST = "/list"
 
+"""
+    DEFAULT COUNT PATH FOR REQUEST
+"""
+DEFAULT_PATH_REQUEST_COUNT = "/count"
 
 """
     GET type for request operations 

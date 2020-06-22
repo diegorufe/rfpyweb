@@ -1,6 +1,6 @@
 class Field:
 
-    def __init__(self, name=None, alias_table=None, alias_field=None, custom_field=None):
+    def __init__(self, name: str = None, alias_table: str = None, alias_field: str = None, custom_field: str = None):
         """
         Constructor for class field
         :param name: is the name for field

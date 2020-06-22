@@ -58,11 +58,6 @@ class TestForeRoute(RFBaseCrudRoute):
 
         return self.rf_py_web.json(vo)
 
-    def read(self):
-        ar_pks_values = [5]
-        vo = self.service.read(ar_pks_values)
-        return self.rf_py_web.json(vo)
-
     def delete(self):
         from test.test_vo import TestVo
         ar_pks_values = [7]
