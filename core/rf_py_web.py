@@ -10,6 +10,9 @@ from transactions.enum_db_engine_type import EnumDbEngineType
 from context.rf_context import RFContext
 from flask import json
 from converters.rf_json_converter import rf_data_to_json_converter
+from flask import Blueprint
+import sys
+import traceback
 
 
 class RFPyWeb(Flask):
@@ -79,6 +82,8 @@ class RFPyWeb(Flask):
         self.security_auth_mode = security_auth_mode if not None else EnumSecurityAuthMode.JWT
         # Call this for init context
         RFContext.get_transaction_manager()
+        # Build error handler
+        self.__build_error_handler__()
 
     def json(self, data):
         """
@@ -201,3 +206,34 @@ class RFPyWeb(Flask):
         :return: service if found by key else return None
         """
         return RFContext.get_service(key)
+
+    def __build_error_handler__(self):
+        """
+        Method for buil error handler
+        :return: None
+        """
+        errors = Blueprint('errors', __name__)
+
+        @errors.app_errorhandler(Exception)
+        def handle_error(error):
+            status_code = 500
+            success = False
+            response = {
+                'success': success,
+                'error': {
+                    'type': 'UnexpectedException',
+                    'message': 'An unexpected error has occurred.'
+                }
+            }
+
+            etype, value, tb = sys.exc_info()
+
+            # TODO send to log
+            print(traceback.print_exception(etype, value, tb))
+
+            return self.jsonify(response), status_code
+
+        self.register_blueprint(errors)
+
+    def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
+        Flask.run(self, host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)

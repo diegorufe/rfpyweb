@@ -62,7 +62,7 @@ class RFBaseRoute:
         :param status: to send
         :return: json response
         """
-        return self.jsonify(data=data_json, status=status, mimetype='application/json')
+        return self.jsonify(data=data_json, status=status.value, mimetype='application/json')
 
     def json(self, data):
         """
@@ -70,7 +70,7 @@ class RFBaseRoute:
         :param data to convert
         :return: data convert to json
         """
-        return self.rf_py_web(data)
+        return self.rf_py_web.json(data)
 
     def jsonify(self, *args, **kwargs):
         """
@@ -120,8 +120,10 @@ class RFBaseRoute:
         if RFUtilsArray.is_not_empty(ar_joins_request):
 
             for join_request in ar_joins_request:
-                ar_joins.append(Join(field=join_request.field, join_type=EnumJoinType.convert(join_request.joinType),
-                                     alias=join_request.alias, custom_query_join=join_request.customQueryJoin))
+                ar_joins.append(Join(field=self.json_value(join_request, 'field'),
+                                     join_type=EnumJoinType.convert(self.json_value(join_request, 'joinType')),
+                                     alias=self.json_value(join_request, 'alias'),
+                                     custom_query_join=self.json_value(join_request, 'customQueryJoin')))
 
         return ar_joins
 
@@ -135,13 +137,15 @@ class RFBaseRoute:
         if RFUtilsArray.is_not_empty(ar_filters_request):
 
             for filter_request in ar_filters_request:
-                ar_filters.append(Filter(field=filter_request.field, alias=filter_request.alias,
-                                         filter_type=EnumFilterType.convert(filter_request.filterType),
-                                         value=filter_request.value,
+                ar_filters.append(Filter(field=self.json_value(filter_request, 'field'),
+                                         alias=self.json_value(filter_request, 'alias'),
+                                         filter_type=EnumFilterType.convert(
+                                             self.json_value(filter_request, 'filterType')),
+                                         value=self.json_value(filter_request, 'value'),
                                          filter_operation_type=EnumFilterOperationType.convert(
-                                             filter_request.filterOperationType),
-                                         open_brackets=filter_request.openBrackets,
-                                         closed_brackets=filter_request.closeBrackets))
+                                             self.json_value(filter_request, 'filterOperationType')),
+                                         open_brackets=self.json_value(filter_request, 'openBrackets'),
+                                         closed_brackets=self.json_value(filter_request, 'closeBrackets')))
         return ar_filters
 
     def make_orders_request(self, ar_orders_request):
@@ -155,8 +159,9 @@ class RFBaseRoute:
         if RFUtilsArray.is_not_empty(ar_orders_request):
 
             for order_request in ar_orders_request:
-                ar_orders.append(Order(field=order_request.field, alias=order_request.alias,
-                                       order_type=EnumOrderType.convert(order_request.orderType)))
+                ar_orders.append(
+                    Order(field=self.json_value(order_request, 'field'), alias=self.json_value(order_request, 'alias'),
+                          order_type=EnumOrderType.convert(self.json_value(order_request, 'orderType'))))
 
         return ar_orders
 
@@ -168,7 +173,7 @@ class RFBaseRoute:
         """
         limit = None
         if limit_request is not None:
-            limit = Limit(start=limit_request.start, end=limit_request.end)
+            limit = Limit(start=self.json_value(limit_request, 'start'), end=self.json_value(limit_request, 'end'))
         return limit
 
     def make_fields_request(self, ar_fields_request):
@@ -181,8 +186,11 @@ class RFBaseRoute:
 
         if RFUtilsArray.is_not_empty(ar_fields_request):
             for field_request in ar_fields_request:
-                ar_fields.append(Field(name=field_request.name, alias_table=field_request.aliasTable,
-                                       alias_field=field_request.aliasField, custom_field=field_request.customField))
+                ar_fields.append(
+                    Field(name=self.json_value(field_request, 'name'),
+                          alias_table=self.json_value(field_request, 'aliasTable'),
+                          alias_field=self.json_value(field_request, 'aliasField'),
+                          custom_field=self.json_value(field_request, 'customField')))
 
         return ar_fields
 
@@ -208,3 +216,15 @@ class RFBaseRoute:
                         RFUtilsBuilt.set_attr(vo_instance, key, data_vo)
 
         return vo_instance
+
+    def json_value(self, json_data, key):
+        """
+        Method for get json value
+        :param json_data: to get value
+        :param key: to get value
+        :return: get key value
+        """
+        result = None
+        if json_data is not None and key is not None and key in json_data:
+            return json_data[key]
+        return result

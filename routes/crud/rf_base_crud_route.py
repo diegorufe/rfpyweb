@@ -106,8 +106,8 @@ class RFBaseCrudRoute(RFBaseRoute):
         :param params: params pass method
         :return: vo read by pk values
         """
-        ar_pks_values = data_request['pkValues']
-        ar_joins_request = data_request['joins']
+        ar_pks_values = self.json_value(data_request, 'pkValues')
+        ar_joins_request = self.json_value(data_request, 'joins')
         vo = self.service.read(ar_pks_values, ar_joins=self.make_joins_request(ar_joins_request))
         return self.make_json_response(data_json=self.json(vo), status=self.status_ok())
 
@@ -118,11 +118,11 @@ class RFBaseCrudRoute(RFBaseRoute):
         :param params: params pass method
         :return: list of data
         """
-        ar_fields_request = data_request['fields']
-        ar_joins_request = data_request['joins']
-        ar_filters_request = data_request['filters']
-        ar_orders_request = data_request['orders']
-        limit_request = data_request['limit']
+        ar_fields_request = self.json_value(data_request, 'fields')
+        ar_joins_request = self.json_value(data_request, 'joins')
+        ar_filters_request = self.json_value(data_request, 'filters')
+        ar_orders_request = self.json_value(data_request, 'orders')
+        limit_request = self.json_value(data_request, 'limit')
         data = self.service.list(
             ar_fields=self.make_fields_request(ar_fields_request),
             ar_filters=self.make_filters_request(ar_filters_request),

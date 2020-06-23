@@ -47,7 +47,7 @@ class RFTransaction:
                     cursor = self.transaction_database.cursor(cursor=DictCursor)
                     cursor.execute(query, dic_params_query)
                     response = cursor.fetchall()
-                if count is True:
+                elif count is True:
                     cursor = self.transaction_database.cursor()
                     cursor.execute(query, dic_params_query)
                     response = cursor.fetchall()
