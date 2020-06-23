@@ -7,6 +7,7 @@ from transactions.enum_transaction_type import EnumTransactionType
 from core.constants.rf_core_constants import APP_ENABLE_LOG_TRANSACTION_DECORATOR
 from context.rf_context import RFContext
 import time
+from log.rf_logger import RFLogger
 
 
 def transaction_decorator(enum_transaction_type: EnumTransactionType):
@@ -20,7 +21,7 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 time_ns = time.time_ns()
 
                 if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
-                    print("Transaction type: " + str(enum_transaction_type))
+                    RFLogger.debug("Transaction type: " + str(enum_transaction_type))
 
                 #  EnumTransactionType.PROPAGATED
                 if enum_transaction_type == EnumTransactionType.PROPAGATED:
@@ -52,8 +53,8 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
 
                 if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
                     time_ns = time.time_ns() - time_ns
-                    print("Time execute transaction in in function " + str(f.__name__) + ", for class " + str(
-                        self) + ", ns: ", str(time_ns))
+                    RFLogger.debug("Time execute transaction in in function " + str(f.__name__) + ", for class " + str(
+                        self) + ", ns: "+ str(time_ns))
 
                 return response
             except Exception as ex:
@@ -63,9 +64,9 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                     RFContext.get_transaction_manager().rollback(rf_transaction)
 
                 if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
-                    print("Error in function  " + str(f.__name__) + ", for class " + str(self))
-                    print("Error in Transaction type: " + str(enum_transaction_type))
-                    print("Error transaction decorator " + str(ex))
+                    RFLogger.debug("Error in function  " + str(f.__name__) + ", for class " + str(self))
+                    RFLogger.debug("Error in Transaction type: " + str(enum_transaction_type))
+                    RFLogger.debug("Error transaction decorator " + str(ex))
 
                 raise ex
 

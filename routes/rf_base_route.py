@@ -19,6 +19,7 @@ from beans.query.field import Field
 from collections.abc import Mapping
 from context.rf_context import RFContext
 from utils.built.rf_utils_built import RFUtilsBuilt
+from decimal import Decimal
 
 
 class RFBaseRoute:
@@ -212,6 +213,8 @@ class RFBaseRoute:
                     if isinstance(data_vo, Mapping):
                         RFUtilsBuilt.set_attr(vo_instance, key,
                                               self.json_data_to_vo(rf_column.join_vo_class_name, data_vo))
+                    elif isinstance(data_vo, float):
+                        RFUtilsBuilt.set_attr(vo_instance, key, Decimal(data_vo))
                     else:
                         RFUtilsBuilt.set_attr(vo_instance, key, data_vo)
 

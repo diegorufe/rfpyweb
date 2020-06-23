@@ -13,6 +13,7 @@ from converters.rf_json_converter import rf_data_to_json_converter
 from flask import Blueprint
 import sys
 import traceback
+from log.rf_logger import RFLogger
 
 
 class RFPyWeb(Flask):
@@ -82,8 +83,10 @@ class RFPyWeb(Flask):
         self.security_auth_mode = security_auth_mode if not None else EnumSecurityAuthMode.JWT
         # Call this for init context
         RFContext.get_transaction_manager()
-        # Build error handler
-        self.__build_error_handler__()
+        # Config error handler
+        self.__config_error_handler__()
+        # Config log
+        self.__config_logger__()
 
     def json(self, data):
         """
@@ -207,9 +210,9 @@ class RFPyWeb(Flask):
         """
         return RFContext.get_service(key)
 
-    def __build_error_handler__(self):
+    def __config_error_handler__(self):
         """
-        Method for buil error handler
+        Method for config error handler
         :return: None
         """
         errors = Blueprint('errors', __name__)
@@ -234,6 +237,13 @@ class RFPyWeb(Flask):
             return self.jsonify(response), status_code
 
         self.register_blueprint(errors)
+
+    def __config_logger__(self):
+        """
+        Method for config logger
+        :return:
+        """
+        RFLogger.init_log()
 
     def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
         Flask.run(self, host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
