@@ -1,2 +1,3 @@
 Flask==1.1.2
-Flask-MySQL=1.5.1
+Flask-MySQL==1.5.1
+rfpyutils==0.0.6
