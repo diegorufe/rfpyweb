@@ -7,7 +7,7 @@ from rfpyweb.core.rf_py_web import RFPyWeb
 from rfpyweb.routes.rf_base_route import RFBaseRoute
 from rfpyweb.routes.rf_routes_constants import REQUEST_TYPE_POST, TEST_ROUTE, DEFAULT_PATH_REQUEST_ADD, \
     DEFAULT_PATH_REQUEST_DELETE, DEFAULT_PATH_REQUEST_EDIT, DEFAULT_PATH_REQUEST_READ, DEFAULT_PATH_REQUEST_LIST, \
-    DEFAULT_PATH_REQUEST_COUNT
+    DEFAULT_PATH_REQUEST_COUNT, DEFAULT_PATH_REQUEST_LOAD_NEW
 from rfpyutils.str.rf_utils_str import RFUtilsStr
 from rfpyweb.context.rf_context import RFContext
 from flask import request
@@ -21,6 +21,7 @@ class RFBaseCrudRoute(RFBaseRoute):
                  path_request_delete: str = DEFAULT_PATH_REQUEST_DELETE,
                  path_request_add: str = DEFAULT_PATH_REQUEST_ADD, path_request_list: str = DEFAULT_PATH_REQUEST_LIST,
                  path_request_count: str = DEFAULT_PATH_REQUEST_COUNT,
+                 path_request_load_new: str = DEFAULT_PATH_REQUEST_LOAD_NEW,
                  secure: bool = True, service_name: str = None):
         # Call super constructor
         RFBaseRoute.__init__(self, rf_py_web, path_requests=path_requests)
@@ -30,6 +31,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         self.path_request_add = path_request_add
         self.path_request_list = path_request_list
         self.path_request_count = path_request_count
+        self.path_request_load_new = path_request_load_new
         self.secure = secure
         self.service = None
 
@@ -98,6 +100,16 @@ class RFBaseCrudRoute(RFBaseRoute):
             :return:
             """
             return self.delete(data_request=request.json, params=None)
+
+        @self.rf_py_web.route(self.path_requests + self.path_request_load_new,
+                              endpoint=self.path_requests + self.path_request_load_new, methods=[REQUEST_TYPE_POST])
+        @self.rf_py_web.secure_filter_decorator(self.path_requests + self.path_request_load_new)
+        def load_new_request():
+            """
+            Method for listen edit request
+            :return:
+            """
+            return self.load_new(params=None)
 
     def read(self, data_request=None, params=None):
         """
@@ -177,3 +189,12 @@ class RFBaseCrudRoute(RFBaseRoute):
         ar_pks_values = data_request['pkValues']
         data = self.service.delete(ar_pks_values)
         return self.make_json_response(data_json=self.json(data), status=self.status_ok())
+
+    def load_new(self, params=None):
+        """
+        Method for load new vo
+        :param params:
+        :return:
+        """
+        vo = self.service.new_instance_vo()
+        return self.make_json_response(data_json=self.json(vo), status=self.status_ok())

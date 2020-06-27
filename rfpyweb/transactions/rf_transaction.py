@@ -51,7 +51,7 @@ class RFTransaction:
                     cursor = self.transaction_database.cursor()
                     cursor.execute(query, dic_params_query)
                     response = cursor.fetchall()
-                    response = response[0]
+                    response = response[0][0]
                 elif insert:
                     cursor = self.transaction_database.cursor()
                     cursor.execute(query, dic_params_query)

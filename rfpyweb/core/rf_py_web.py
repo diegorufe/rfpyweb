@@ -14,6 +14,7 @@ from flask import Blueprint
 import sys
 import traceback
 from rfpyutils.log.rf_utils_logger import RFUtilsLogger
+from flask_cors import CORS
 
 
 class RFPyWeb(Flask):
@@ -87,6 +88,8 @@ class RFPyWeb(Flask):
         self.__config_error_handler__()
         # Config log
         self.__config_logger__()
+        # Config cors
+        self.__config_cors__()
 
     def json(self, data):
         """
@@ -243,6 +246,13 @@ class RFPyWeb(Flask):
         :return:
         """
         RFUtilsLogger.init_log()
+
+    def __config_cors__(self):
+        """
+        Method for config cors
+        :return:
+        """
+        CORS(self)
 
     def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
         Flask.run(self, host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)

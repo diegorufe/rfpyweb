@@ -45,6 +45,11 @@ DEFAULT_PATH_REQUEST_LIST = "/list"
 DEFAULT_PATH_REQUEST_COUNT = "/count"
 
 """
+    DEFAULT LOAD NEW PATH FOR REQUEST
+"""
+DEFAULT_PATH_REQUEST_LOAD_NEW = "/loadNew"
+
+"""
     GET type for request operations 
 """
 REQUEST_TYPE_GET = "GET"

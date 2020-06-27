@@ -20,6 +20,7 @@ from collections.abc import Mapping
 from rfpyweb.context.rf_context import RFContext
 from rfpyutils.built.rf_utils_built import RFUtilsBuilt
 from decimal import Decimal
+from flask import make_response
 
 
 class RFBaseRoute:
@@ -63,7 +64,8 @@ class RFBaseRoute:
         :param status: to send
         :return: json response
         """
-        return self.jsonify(data=data_json, status=status.value, mimetype='application/json')
+        # return self.jsonify(data=data_json, status=status.value, mimetype='application/json')
+        return make_response(self.jsonify(data=data_json), status.value)
 
     def json(self, data):
         """

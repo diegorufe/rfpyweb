@@ -170,7 +170,7 @@ class RFBaseDao:
 
         query_builder = query_builder_select + query_builder_form + query_builder_joins + query_builder_where
 
-        result = rf_transaction.execute_query(query_builder, dic_params_query=dic_params_query)
+        result = rf_transaction.execute_query(query_builder, dic_params_query=dic_params_query, count=True)
 
         return result
 
