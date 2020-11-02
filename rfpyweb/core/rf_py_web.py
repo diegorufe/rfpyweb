@@ -188,12 +188,23 @@ class RFPyWeb(Flask):
         :param password: for connect to database
         :return: None
         """
-        from flaskext.mysql import MySQL
-        self.config['MYSQL_DATABASE_USER'] = user
-        self.config['MYSQL_DATABASE_PASSWORD'] = password
-        self.config['MYSQL_DATABASE_DB'] = database
-        mysql = MySQL()
-        mysql.init_app(self)
+        # This no pool create connection for every request
+        # from flaskext.mysql import MySQL
+        # self.config['MYSQL_DATABASE_USER'] = user
+        # self.config['MYSQL_DATABASE_PASSWORD'] = password
+        # self.config['MYSQL_DATABASE_DB'] = database
+        # mysql = MySQL()
+        # mysql.init_app(self)
+        # self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
+
+        from flask_mysqlpool import MySQLPool
+        self.config['MYSQL_USER'] = user
+        self.config['MYSQL_PASS'] = password
+        self.config['MYSQL_DB'] = database
+        self.config['MYSQL_POOL_NAME'] = 'mysql_pool'
+        self.config['MYSQL_POOL_SIZE'] = 10
+        self.config['MYSQL_AUTOCOMMIT'] = False
+        mysql = MySQLPool(self)
         self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
 
     def add_service(self, key, service):
@@ -254,5 +265,23 @@ class RFPyWeb(Flask):
         """
         CORS(self)
 
-    def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
-        Flask.run(self, host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
+    def run(self, is_gevent=False, host=None, port=None, debug=None, load_dotenv=True, **options):
+        if is_gevent:
+            self.__run_gevent__(host=host, port=port)
+        else:
+            Flask.run(self, host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
+
+    def __run_gevent__(self, host='0.0.0.0', port=5000):
+        """
+        Method for run with gevent
+        """
+        from gevent.pywsgi import WSGIServer
+
+        if host is None:
+            host = '0.0.0.0'
+
+        if port is None:
+            port = 5000
+
+        http_server = WSGIServer((host, port), self)
+        http_server.serve_forever()

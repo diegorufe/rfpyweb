@@ -3,6 +3,8 @@
   This module contains class for crud routes operations
 
 """
+from rfpyutils.log.rf_utils_logger import RFUtilsLogger
+
 from rfpyweb.core.rf_py_web import RFPyWeb
 from rfpyweb.routes.rf_base_route import RFBaseRoute
 from rfpyweb.routes.rf_routes_constants import REQUEST_TYPE_POST, TEST_ROUTE, DEFAULT_PATH_REQUEST_ADD, \
@@ -11,6 +13,8 @@ from rfpyweb.routes.rf_routes_constants import REQUEST_TYPE_POST, TEST_ROUTE, DE
 from rfpyutils.str.rf_utils_str import RFUtilsStr
 from rfpyweb.context.rf_context import RFContext
 from flask import request
+import time
+from rfpyweb.core.constants.rf_core_constants import APP_ENABLE_LOG_CRUD_OPERATIONS
 
 
 class RFBaseCrudRoute(RFBaseRoute):
@@ -130,6 +134,10 @@ class RFBaseCrudRoute(RFBaseRoute):
         :param params: params pass method
         :return: list of data
         """
+        start_time_ns = 0
+        if APP_ENABLE_LOG_CRUD_OPERATIONS:
+            start_time_ns = time.time_ns()
+
         ar_fields_request = self.json_value(data_request, 'fields')
         ar_joins_request = self.json_value(data_request, 'joins')
         ar_filters_request = self.json_value(data_request, 'filters')
@@ -142,7 +150,14 @@ class RFBaseCrudRoute(RFBaseRoute):
             ar_orders=self.make_orders_request(ar_orders_request),
             limit=self.make_limit_request(limit_request)
         )
-        return self.make_json_response(data_json=data, status=self.status_ok())
+
+        if APP_ENABLE_LOG_CRUD_OPERATIONS:
+            time_ns = time.time_ns() - start_time_ns
+            RFUtilsLogger.debug(
+                "$$Time crud list before json: " + str(time_ns) + ", ms " + str(
+                    time_ns / 1000000))
+
+        return self.make_json_response(data_json=data, status=self.status_ok(), start_time_ns=start_time_ns)
 
     def count(self, data_request=None, params=None):
         """

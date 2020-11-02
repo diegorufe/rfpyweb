@@ -21,7 +21,7 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 time_ns = time.time_ns()
 
                 if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
-                    RFUtilsLogger.debug("Transaction type: " + str(enum_transaction_type))
+                    RFUtilsLogger.debug("$$Transaction type: " + str(enum_transaction_type))
 
                 #  EnumTransactionType.PROPAGATED
                 if enum_transaction_type == EnumTransactionType.PROPAGATED:
@@ -44,7 +44,13 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 elif enum_transaction_type == EnumTransactionType.REQUIRED_NEVER and 'rf_transaction' not in kwargs:
                     kwargs['rf_transaction'] = None
 
-                # Execute method
+                if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
+                    time_ns_create_transaction = time.time_ns() - time_ns
+                    RFUtilsLogger.debug(
+                        "$$Time create transaction ns: " + str(time_ns_create_transaction) + ", ms " + str(
+                            time_ns_create_transaction / 1000000))
+
+                    # Execute method
                 response = f(self, *args, **kwargs)
 
                 # commit transaction if necessary
@@ -54,8 +60,8 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                 if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
                     time_ns = time.time_ns() - time_ns
                     RFUtilsLogger.debug(
-                        "Time execute transaction in in function " + str(f.__name__) + ", for class " + str(
-                            self) + ", ns: " + str(time_ns))
+                        "$$Time execute transaction in in function " + str(f.__name__) + ", for class " + str(
+                            self) + ", ns: " + str(time_ns) + ", ms " + str(time_ns / 1000000))
 
                 return response
             except Exception as ex:
@@ -65,9 +71,9 @@ def transaction_decorator(enum_transaction_type: EnumTransactionType):
                     RFContext.get_transaction_manager().rollback(rf_transaction)
 
                 if APP_ENABLE_LOG_TRANSACTION_DECORATOR:
-                    RFUtilsLogger.debug("Error in function  " + str(f.__name__) + ", for class " + str(self))
-                    RFUtilsLogger.debug("Error in Transaction type: " + str(enum_transaction_type))
-                    RFUtilsLogger.debug("Error transaction decorator " + str(ex))
+                    RFUtilsLogger.debug("$$Error in function  " + str(f.__name__) + ", for class " + str(self))
+                    RFUtilsLogger.debug("$$Error in Transaction type: " + str(enum_transaction_type))
+                    RFUtilsLogger.debug("$$Error transaction decorator " + str(ex))
 
                 raise ex
 

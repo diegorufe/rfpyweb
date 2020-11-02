@@ -3,6 +3,8 @@
    This module contains class for routes operations
 
 """
+from rfpyutils.log.rf_utils_logger import RFUtilsLogger
+
 from rfpyweb.core.rf_py_web import RFPyWeb
 from rfpyweb.routes.rf_routes_constants import DEFAULT_PATH_REQUEST_TEST, REQUEST_TYPE_GET, TEST_ROUTE
 from rfpyweb.constants.http.enum_http_status_types import EnumHttpStatusType
@@ -21,6 +23,8 @@ from rfpyweb.context.rf_context import RFContext
 from rfpyutils.built.rf_utils_built import RFUtilsBuilt
 from decimal import Decimal
 from flask import make_response
+from rfpyweb.core.constants.rf_core_constants import APP_ENABLE_LOG_CRUD_OPERATIONS
+import time
 
 
 class RFBaseRoute:
@@ -57,16 +61,29 @@ class RFBaseRoute:
             """
             return self.jsonify(test="Test")
 
-    def make_json_response(self, data_json, status: EnumHttpStatusType = EnumHttpStatusType.BAD_REQUEST):
+    def make_json_response(self, data_json, status: EnumHttpStatusType = EnumHttpStatusType.BAD_REQUEST,
+                           start_time_ns=0):
         """
         Method for make json response
         :param data_json: to convert
         :param status: to send
+        :param start_time_ns: indicate start time
         :return: json response
         """
+
         # return self.jsonify(data=data_json, status=status.value, mimetype='application/json')
+        time_ns = start_time_ns
+
         response = make_response(self.json({'data': data_json}), status.value)
+
+        if APP_ENABLE_LOG_CRUD_OPERATIONS:
+            time_ns = time.time_ns() - time_ns
+            RFUtilsLogger.debug(
+                "$$Time convert json response: " + str(time_ns) + ", ms " + str(
+                    time_ns / 1000000))
+
         response.mimetype = 'application/json'
+
         return response
 
     def json(self, data):

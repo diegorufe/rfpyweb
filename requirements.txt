@@ -2,3 +2,5 @@ Flask==1.1.2
 Flask-MySQL==1.5.1
 rfpyutils==0.0.6
 flask-cors==3.0.8
+flask-mysqlpool==1.0.4
+gevent==20.9.0

@@ -43,7 +43,10 @@ class RFTransactionManager:
             if db_engine_type == EnumDbEngineType.RF_MYSQL:
                 rf_mysql_engine = RFContext.get_db_engine(EnumDbEngineType.RF_MYSQL)
                 if rf_mysql_engine is not None:
-                    response = RFTransaction(enum_transaction_type, transaction_database=rf_mysql_engine.connect())
+                    # No pool
+                    # response = RFTransaction(enum_transaction_type, transaction_database=rf_mysql_engine.get_db())
+                    response = RFTransaction(enum_transaction_type,
+                                             transaction_database=rf_mysql_engine.connection.get_connection())
 
         return response
 

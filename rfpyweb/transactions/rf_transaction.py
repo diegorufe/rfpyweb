@@ -44,7 +44,9 @@ class RFTransaction:
         if self.transaction_database is not None:
             if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
                 if list_query is True:
-                    cursor = self.transaction_database.cursor(cursor=DictCursor)
+                    # No pool conection
+                    # cursor = self.transaction_database.cursor(cursor=DictCursor)
+                    cursor = self.transaction_database.cursor(dictionary=True)
                     cursor.execute(query, dic_params_query)
                     response = cursor.fetchall()
                 elif count is True:
