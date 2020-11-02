@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/rfweb.iml" filepath="$PROJECT_DIR$/.idea/rfweb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/rfpyweb.iml" filepath="$PROJECT_DIR$/.idea/rfpyweb.iml" />
     </modules>
   </component>
 </project>

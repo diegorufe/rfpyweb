@@ -121,7 +121,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         ar_pks_values = self.json_value(data_request, 'pkValues')
         ar_joins_request = self.json_value(data_request, 'joins')
         vo = self.service.read(ar_pks_values, ar_joins=self.make_joins_request(ar_joins_request))
-        return self.make_json_response(data_json=self.json(vo), status=self.status_ok())
+        return self.make_json_response(data_json=vo, status=self.status_ok())
 
     def list(self, data_request=None, params=None):
         """
@@ -142,7 +142,7 @@ class RFBaseCrudRoute(RFBaseRoute):
             ar_orders=self.make_orders_request(ar_orders_request),
             limit=self.make_limit_request(limit_request)
         )
-        return self.make_json_response(data_json=self.json(data), status=self.status_ok())
+        return self.make_json_response(data_json=data, status=self.status_ok())
 
     def count(self, data_request=None, params=None):
         """
@@ -155,7 +155,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         ar_filters_request = data_request['filters']
         data = self.service.count(ar_filters=self.make_filters_request(ar_filters_request),
                                   ar_joins=self.make_joins_request(ar_joins_request))
-        return self.make_json_response(data_json=self.json(data), status=self.status_ok())
+        return self.make_json_response(data_json=data, status=self.status_ok())
 
     def add(self, data_request=None, params=None):
         """
@@ -166,7 +166,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         """
         vo_request_data = data_request['data']
         data = self.service.add(vo=self.json_data_to_vo(self.service.vo_class_name(), vo_request_data))
-        return self.make_json_response(data_json=self.json(data), status=self.status_created())
+        return self.make_json_response(data_json=data, status=self.status_created())
 
     def edit(self, data_request=None, params=None):
         """
@@ -177,7 +177,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         """
         vo_request_data = data_request['data']
         data = self.service.edit(vo=self.json_data_to_vo(self.service.vo_class_name(), vo_request_data))
-        return self.make_json_response(data_json=self.json(data), status=self.status_ok())
+        return self.make_json_response(data_json=data, status=self.status_ok())
 
     def delete(self, data_request=None, params=None):
         """
@@ -188,7 +188,7 @@ class RFBaseCrudRoute(RFBaseRoute):
         """
         ar_pks_values = data_request['pkValues']
         data = self.service.delete(ar_pks_values)
-        return self.make_json_response(data_json=self.json(data), status=self.status_ok())
+        return self.make_json_response(data_json=data, status=self.status_ok())
 
     def load_new(self, params=None):
         """
@@ -197,4 +197,4 @@ class RFBaseCrudRoute(RFBaseRoute):
         :return:
         """
         vo = self.service.new_instance_vo()
-        return self.make_json_response(data_json=self.json(vo), status=self.status_ok())
+        return self.make_json_response(data_json=vo, status=self.status_ok())

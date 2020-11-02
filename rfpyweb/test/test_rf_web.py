@@ -16,4 +16,6 @@ rf_py_web.add_service('testforebo', TestForeBo(TestForeDao()))
 # Examples of routes
 TestForeRoute(rf_py_web=rf_py_web).load()
 
-rf_py_web.run(debug=True)
+debug = False
+
+rf_py_web.run(debug=debug)

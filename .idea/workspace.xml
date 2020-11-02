@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="79af63ba-2367-435c-9550-5dc3313ffdb9" name="Default Changelist" comment="" />
+    <list default="true" id="79af63ba-2367-435c-9550-5dc3313ffdb9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/rfpyweb.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rfpyweb.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/routes/crud/rf_base_crud_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/routes/crud/rf_base_crud_route.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/routes/rf_base_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/routes/rf_base_route.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/test/test_rf_web.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/test/test_rf_web.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +23,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1d9u7pEmCqpD80uhvfvhmldegid" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -22,7 +34,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/dao" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -36,7 +49,7 @@
       <recent name="E:\trabajo\repos\python\rfweb\dao" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_rf_web">
+  <component name="RunManager" selected="Python.test_rf_web (1)">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="rfpyweb" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -71,6 +84,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/test_functions.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_rf_web (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="rfpyweb" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/rfpyweb/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/rfpyweb/test/test_rf_web.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -145,6 +179,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test_rf_web (1)" />
         <item itemvalue="Python.test_rf_web" />
         <item itemvalue="Python.test_functions" />
       </list>
@@ -167,57 +202,25 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="requirements.txt" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="715" y="223" width="839" height="594" key="#xdebugger.evaluate" timestamp="1591901988770">
+    <state width="1899" height="266" key="GridCell.Tab.0.bottom" timestamp="1604293376649">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="715" y="223" width="839" height="594" key="#xdebugger.evaluate/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1591901988770" />
-    <state width="818" height="466" key="DebuggerActiveHint" timestamp="1592162036353">
+    <state width="1899" height="266" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604293376649" />
+    <state width="1899" height="266" key="GridCell.Tab.0.center" timestamp="1604293376648">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="818" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592162036353" />
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1592166827912">
+    <state width="1899" height="266" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604293376648" />
+    <state width="1899" height="266" key="GridCell.Tab.0.left" timestamp="1604293376648">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1592166827912">
+    <state width="1899" height="266" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604293376648" />
+    <state width="1899" height="266" key="GridCell.Tab.0.right" timestamp="1604293376649">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1592166827912">
+    <state width="1899" height="266" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604293376649" />
+    <state x="461" y="162" key="SettingsEditor" timestamp="1604292919046">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1592166827912">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1592166827912">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1592166827912">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1592166827912">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1592166827912">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166827912" />
-    <state x="461" y="162" key="SettingsEditor" timestamp="1592165879691">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592165879691" />
-    <state x="656" y="118" width="737" height="804" key="find.popup" timestamp="1592166050577">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="656" y="118" width="737" height="804" key="find.popup/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592166050577" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1592163336279">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1536.824/-1920.0.1536.824@0.0.1920.1040" timestamp="1592163336279" />
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604292919046" />
   </component>
 </project>

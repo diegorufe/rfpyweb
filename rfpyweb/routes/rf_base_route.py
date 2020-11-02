@@ -65,7 +65,9 @@ class RFBaseRoute:
         :return: json response
         """
         # return self.jsonify(data=data_json, status=status.value, mimetype='application/json')
-        return make_response(self.jsonify(data=data_json), status.value)
+        response = make_response(self.json({'data': data_json}), status.value)
+        response.mimetype = 'application/json'
+        return response
 
     def json(self, data):
         """
