@@ -23,7 +23,7 @@ class RFTransactionManager:
         self.function_rollback_transaction = function_rollback_transaction
 
     def create_transaction(self, enum_transaction_type: EnumTransactionType = EnumTransactionType.PROPAGATED,
-                           params=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL):
+                           params=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL):
         """
         Method for create transaction
         :param enum_transaction_type:  type for transaction to create
@@ -40,13 +40,14 @@ class RFTransactionManager:
             response = self.function_create_transaction(enum_transaction_type, params=params,
                                                         db_engine_type=db_engine_type)
         else:
-            if db_engine_type == EnumDbEngineType.RF_MYSQL:
-                rf_mysql_engine = RFContext.get_db_engine(EnumDbEngineType.RF_MYSQL)
-                if rf_mysql_engine is not None:
-                    # No pool
-                    # response = RFTransaction(enum_transaction_type, transaction_database=rf_mysql_engine.get_db())
-                    response = RFTransaction(enum_transaction_type,
-                                             transaction_database=rf_mysql_engine.connection.get_connection())
+            rf_mysql_engine = RFContext.get_db_engine(db_engine_type)
+
+            if db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
+                response = RFTransaction(enum_transaction_type,
+                                         transaction_database=rf_mysql_engine.connection.get_connection())
+            elif db_engine_type == EnumDbEngineType.RF_MYSQL:
+                # No pool
+                response = RFTransaction(enum_transaction_type, transaction_database=rf_mysql_engine.get_db())
 
         return response
 
@@ -65,7 +66,8 @@ class RFTransactionManager:
                 response = self.function_commit_transaction(rf_transaction, params)
 
             elif rf_transaction is not None:
-                if rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL:
+                if rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL or \
+                        rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
                     rf_transaction.transaction_database.commit()
                     rf_transaction.transaction_database.close()
                     response = True
@@ -96,7 +98,8 @@ class RFTransactionManager:
             response = self.function_commit_transaction(rf_transaction, params=params)
 
         elif rf_transaction is not None:
-            if rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL:
+            if rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL or \
+                    rf_transaction.db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
                 rf_transaction.transaction_database.rollback()
                 rf_transaction.transaction_database.close()
                 response = True

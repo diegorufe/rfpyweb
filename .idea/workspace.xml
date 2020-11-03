@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="79af63ba-2367-435c-9550-5dc3313ffdb9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/diego.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rfpyweb/core/constants/rf_core_constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/core/constants/rf_core_constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rfpyweb/core/rf_py_web.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/core/rf_py_web.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rfpyweb/routes/crud/rf_base_crud_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/routes/crud/rf_base_crud_route.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rfpyweb/routes/rf_base_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/routes/rf_base_route.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/dao/rf_base_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/dao/rf_base_dao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/test/test_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/test/test_dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rfpyweb/test/test_rf_web.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/test/test_rf_web.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/transactions/enum_db_engine_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/transactions/enum_db_engine_type.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rfpyweb/transactions/rf_transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/transactions/rf_transaction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rfpyweb/transactions/rf_transaction_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/transactions/rf_transaction_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rfpyweb/transactions/transaction_decorator.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/transactions/transaction_decorator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rfpyweb/utils/db/rf_utils_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/rfpyweb/utils/db/rf_utils_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,19 +34,21 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\trabajo\repos\python\rfpyweb" />
+      <recent name="E:\trabajo\repos\python\rfweb\dao" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\trabajo\repos\python\rfweb" />
       <recent name="E:\trabajo\repos\python\rfweb\bo\transactions" />
       <recent name="E:\trabajo\repos\python\rfweb\bo" />
-      <recent name="E:\trabajo\repos\python\rfweb\dao" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\trabajo\repos\python\rfweb\dao" />
     </key>
   </component>
@@ -162,49 +164,53 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="requirements.txt" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="704" height="466" key="DebuggerActiveHint" timestamp="1604298886368">
+    <state width="718" height="466" key="DebuggerActiveHint" timestamp="1604381160700">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="704" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604298886368" />
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1604304157597">
+    <state width="718" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381160700" />
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1604381283559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283559" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1604381283558">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283558" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1604381283558">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283558" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1604381283559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283559" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1604381283559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283559" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1604381283559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283559" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1604381283559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1604304157597">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283559" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1604381283559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604304157597" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381283559" />
     <state x="793" y="231" key="RollbackChangesDialog" timestamp="1604294607329">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="793" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604294607329" />
-    <state x="461" y="162" key="SettingsEditor" timestamp="1604303962501">
+    <state x="461" y="162" key="SettingsEditor" timestamp="1604379779961">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604303962501" />
+    <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604379779961" />
+    <state x="522" y="249" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1604381171653">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="522" y="249" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040/1920.0.1536.824@0.0.1920.1040" timestamp="1604381171653" />
   </component>
 </project>

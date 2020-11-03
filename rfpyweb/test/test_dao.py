@@ -6,10 +6,10 @@ from rfpyweb.transactions.enum_db_engine_type import EnumDbEngineType
 class TestDao(RFBaseDao):
 
     def __init__(self):
-        RFBaseDao.__init__(self, vo_class=TestVo, db_engine_type=EnumDbEngineType.RF_MYSQL)
+        RFBaseDao.__init__(self, vo_class=TestVo, db_engine_type=EnumDbEngineType.RF_MYSQL_POOL)
 
 
 class TestForeDao(RFBaseDao):
 
     def __init__(self):
-        RFBaseDao.__init__(self, vo_class=TestForeVo, db_engine_type=EnumDbEngineType.RF_MYSQL)
+        RFBaseDao.__init__(self, vo_class=TestForeVo, db_engine_type=EnumDbEngineType.RF_MYSQL_POOL)

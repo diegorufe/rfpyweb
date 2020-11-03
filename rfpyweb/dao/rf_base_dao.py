@@ -18,7 +18,7 @@ from rfpyweb.constants.constants_associations import DEFAULT_ALIAS
 
 class RFBaseDao:
 
-    def __init__(self, vo_class=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL):
+    def __init__(self, vo_class=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL):
         """
         Constructor for dao
         :param vo_class is a class vo data

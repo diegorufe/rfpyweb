@@ -9,7 +9,7 @@ from pymysql.cursors import DictCursor
 class RFTransaction:
 
     def __init__(self, enum_transaction_type: EnumTransactionType, transaction_database=None,
-                 db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL):
+                 db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL):
         """
         Constructor for class transactions database
         :param enum_transaction_type:  type for transaction
@@ -42,11 +42,15 @@ class RFTransaction:
         response = None
 
         if self.transaction_database is not None:
-            if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
+            if self.db_engine_type == EnumDbEngineType.RF_MYSQL_POOL or \
+                    self.db_engine_type == EnumDbEngineType.RF_MYSQL:
                 if list_query is True:
-                    # No pool conection
-                    # cursor = self.transaction_database.cursor(cursor=DictCursor)
-                    cursor = self.transaction_database.cursor(dictionary=True)
+                    if self.db_engine_type == EnumDbEngineType.RF_MYSQL:
+                        # No pool conection
+                        cursor = self.transaction_database.cursor(cursor=DictCursor)
+                    else:
+                        cursor = self.transaction_database.cursor(dictionary=True)
+
                     cursor.execute(query, dic_params_query)
                     response = cursor.fetchall()
                 elif count is True:

@@ -180,32 +180,37 @@ class RFPyWeb(Flask):
         """
         RFContext.get_db_engine(key)
 
-    def create_db_engine_rf_mysql(self, database: str, user: str, password: str):
+    def create_db_engine_rf_mysql(self, database: str, user: str, password: str, is_pool_connection: bool = True,
+                                  pool_size: int = 20):
         """
         Method for create engine rf mysql
         :param database: for connect to database
         :param user: for connect to database
         :param password: for connect to database
+        :param is_pool_connection: indicate is pool connection default true
+        :param pool_size: for connections
         :return: None
         """
-        # This no pool create connection for every request
-        # from flaskext.mysql import MySQL
-        # self.config['MYSQL_DATABASE_USER'] = user
-        # self.config['MYSQL_DATABASE_PASSWORD'] = password
-        # self.config['MYSQL_DATABASE_DB'] = database
-        # mysql = MySQL()
-        # mysql.init_app(self)
-        # self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
 
-        from flask_mysqlpool import MySQLPool
-        self.config['MYSQL_USER'] = user
-        self.config['MYSQL_PASS'] = password
-        self.config['MYSQL_DB'] = database
-        self.config['MYSQL_POOL_NAME'] = 'mysql_pool'
-        self.config['MYSQL_POOL_SIZE'] = 10
-        self.config['MYSQL_AUTOCOMMIT'] = False
-        mysql = MySQLPool(self)
-        self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
+        if is_pool_connection:
+            from flask_mysqlpool import MySQLPool
+            self.config['MYSQL_USER'] = user
+            self.config['MYSQL_PASS'] = password
+            self.config['MYSQL_DB'] = database
+            self.config['MYSQL_POOL_NAME'] = 'mysql_pool'
+            self.config['MYSQL_POOL_SIZE'] = pool_size
+            self.config['MYSQL_AUTOCOMMIT'] = False
+            mysql = MySQLPool(self)
+            self.add_db_engine(EnumDbEngineType.RF_MYSQL_POOL, mysql)
+        else:
+            # This no pool create connection for every request
+            from flaskext.mysql import MySQL
+            self.config['MYSQL_DATABASE_USER'] = user
+            self.config['MYSQL_DATABASE_PASSWORD'] = password
+            self.config['MYSQL_DATABASE_DB'] = database
+            mysql = MySQL()
+            mysql.init_app(self)
+            self.add_db_engine(EnumDbEngineType.RF_MYSQL, mysql)
 
     def add_service(self, key, service):
         """

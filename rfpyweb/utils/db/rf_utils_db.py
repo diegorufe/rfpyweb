@@ -16,9 +16,9 @@ class RFUtilsDb:
 
     @staticmethod
     def get_fields_query(ar_fields=None, rf_transaction=None,
-                         db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_default_fields_table=None):
+                         db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL, ar_default_fields_table=None):
         """
-        Method for get fields to get in query
+        Method for get fields to get in queryRF_MYSQL
         :param ar_fields: passed for list function
         :param rf_transaction: to execute query
         :param db_engine_type for database
@@ -28,7 +28,7 @@ class RFUtilsDb:
         find_all_fields = RFUtilsArray.is_empty(ar_fields)
         ar_fields_query = []
 
-        if db_engine_type == EnumDbEngineType.RF_MYSQL:
+        if db_engine_type == EnumDbEngineType.RF_MYSQL or db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
             # Find all field raw columns for table
             if find_all_fields and rf_transaction is not None:
                 ar_fields_query = ar_default_fields_table
@@ -39,7 +39,7 @@ class RFUtilsDb:
 
     @staticmethod
     def build_select_query(ar_fields_query=None, ar_joins_query=None,
-                           db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_default_fields_table=None,
+                           db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL, ar_default_fields_table=None,
                            vo_class_name=None):
         """
         Method for build select query
@@ -53,7 +53,7 @@ class RFUtilsDb:
         query_builder = ""
 
         # Engine EnumDbEngineType.RF_MYSQL
-        if db_engine_type == EnumDbEngineType.RF_MYSQL:
+        if db_engine_type == EnumDbEngineType.RF_MYSQL or db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
             query_builder = " SELECT "
 
             # Load selected fields
@@ -153,7 +153,7 @@ class RFUtilsDb:
         return query_builder
 
     @staticmethod
-    def build_from_query(db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, table_name: str = None):
+    def build_from_query(db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL, table_name: str = None):
         """
         Method for build from query
         :param db_engine_type: for build from
@@ -163,13 +163,13 @@ class RFUtilsDb:
         query_builder = ""
 
         # Engine EnumDbEngineType.RF_MYSQL
-        if db_engine_type == EnumDbEngineType.RF_MYSQL:
+        if db_engine_type == EnumDbEngineType.RF_MYSQL or db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
             query_builder = " FROM " + table_name + " as " + DEFAULT_ALIAS
 
         return query_builder
 
     @staticmethod
-    def build_joins_query(db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL, ar_joins_query=None,
+    def build_joins_query(db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL, ar_joins_query=None,
                           vo_class_name=None):
         """
         Method for build join query
@@ -182,7 +182,7 @@ class RFUtilsDb:
 
         if RFUtilsArray.is_not_empty(ar_joins_query):
             for join in ar_joins_query:
-                if db_engine_type == EnumDbEngineType.RF_MYSQL:
+                if db_engine_type == EnumDbEngineType.RF_MYSQL or db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
 
                     if RFUtilsStr.is_not_emtpy(join.custom_query_join):
                         query_builder = query_builder + " " + join.custom_query_join
@@ -237,7 +237,7 @@ class RFUtilsDb:
 
     @staticmethod
     def build_where_query(ar_filters_query=None, dic_params_query={},
-                          db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL):
+                          db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL):
         """
         Method for build where query
         :param ar_filters_query: to build
@@ -256,7 +256,7 @@ class RFUtilsDb:
 
                 query_builder_partial = ""
 
-                if db_engine_type == EnumDbEngineType.RF_MYSQL:
+                if db_engine_type == EnumDbEngineType.RF_MYSQL or db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
                     filter_type = filter_query.filter_type
 
                     if filter_type is not None:
@@ -365,12 +365,12 @@ class RFUtilsDb:
         return query_builder_where + " " + query_builder
 
     @staticmethod
-    def build_order_query(ar_orders=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL):
+    def build_order_query(ar_orders=None, db_engine_type: EnumDbEngineType = EnumDbEngineType.RF_MYSQL_POOL):
         query_builder = ""
 
         if RFUtilsArray.is_not_empty(ar_orders):
 
-            if db_engine_type == EnumDbEngineType.RF_MYSQL:
+            if db_engine_type == EnumDbEngineType.RF_MYSQL or db_engine_type == EnumDbEngineType.RF_MYSQL_POOL:
                 first: bool = True
 
                 query_builder = " ORDER BY "
