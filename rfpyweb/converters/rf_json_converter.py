@@ -12,6 +12,8 @@ def rf_data_to_json_converter(data):
 
     if isinstance(data, datetime.datetime) or isinstance(data, Decimal):
         result = data.__str__()
+    elif isinstance(data, bytes):
+        result = data.decode("utf-8")
     else:
         result = data.__dict__
 
